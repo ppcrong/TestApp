@@ -4,7 +4,7 @@ android {
     compileSdkVersion 25
     buildToolsVersion "25.0.2"
     defaultConfig {
-        applicationId "deng.yr.testapp"
+        applicationId "com.ppcrong.testapp"
         minSdkVersion 21
         targetSdkVersion 25
         versionCode 1702101120
