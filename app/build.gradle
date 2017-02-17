@@ -1,0 +1,65 @@
+apply plugin: 'com.android.application'
+
+android {
+    compileSdkVersion 25
+    buildToolsVersion "25.0.2"
+    defaultConfig {
+        applicationId "deng.yr.testapp"
+        minSdkVersion 21
+        targetSdkVersion 25
+        versionCode 1702101120
+        versionName "1.000.000"
+        testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
+    }
+    signingConfigs {
+        debug {
+            storeFile file("cloudchip.jks")
+            storePassword "cloudchip"
+            keyAlias "cloudchip"
+            keyPassword "cloudchip"
+        }
+        release {
+            storeFile file("cloudchip.jks")
+            storePassword "cloudchip"
+            keyAlias "cloudchip"
+            keyPassword "cloudchip"
+        }
+    }
+    buildTypes {
+        debug {
+            buildConfigField "boolean", "LOG_DEBUG", "true"
+            minifyEnabled false
+            signingConfig signingConfigs.debug
+        }
+        release {
+            buildConfigField "boolean", "LOG_DEBUG", "true"
+            minifyEnabled true
+            shrinkResources true
+            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+            signingConfig signingConfigs.release
+        }
+    }
+
+}
+
+dependencies {
+    compile fileTree(dir: 'libs', include: ['*.jar'])
+    androidTestCompile('com.android.support.test.espresso:espresso-core:2.2.2', {
+        exclude group: 'com.android.support', module: 'support-annotations'
+    })
+    compile 'com.android.support:appcompat-v7:25.1.1'
+    compile 'com.android.support:design:25.1.1'
+    testCompile 'junit:junit:4.12'
+
+    ////////// External libs //////////
+    // For log (KLog)
+    compile 'com.github.zhaokaiqiang.klog:library:1.6.0'
+    // For butterknife
+    compile 'com.jakewharton:butterknife:8.5.1'
+    annotationProcessor 'com.jakewharton:butterknife-compiler:8.5.1'
+    // For Android-M permission
+    compile project(':permlib')
+    // For LogLib
+    compile project(':loglib')
+    ///////////////////////////////////
+}

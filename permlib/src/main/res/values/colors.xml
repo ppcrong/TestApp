@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="colorPrimary">#3F51B5</color>
+    <color name="colorPrimaryDark">#000000</color>
+    <color name="colorAccent">#FF4081</color>
+
+    <color name="transparent">#00000000</color>
+    <color name="white">#FFFFFF</color>
+    <color name="ghostwhite">#F8F8FF</color>
+    <color name="whitesmoke">#F5F5F5</color>
+    <color name="black">#000000</color>
+    <color name="gray">#808080</color>
+    <color name="darkgray">#A9A9A9</color>
+    <color name="dimgray">#696969</color>
+    <color name="lighter_gray">#eee</color>
+    <color name="silver">#C0C0C0</color>
+    <color name="gainsboro">#DCDCDC</color>
+    <color name="red">#FF0000</color>
+    <color name="sakura">#FEDFE1</color>
+    <color name="taikoh">#F8C3CD</color>
+    <color name="yellow">#FFFF00</color>
+    <color name="blue">#0000FF</color>
+    <color name="dodgerblue">#1E90FF</color>
+    <color name="deepskyblue">#00BFFF</color>
+    <color name="benimidori">#7B90D2</color>
+    <color name="darkorange">#FF8C00</color>
+    <color name="hiwamoegi">#90B44B</color>
+    <color name="sora">#58B2DC</color>
+    <color name="mizuasagi">#66BAB7</color>
+    <color name="namari">#787878</color>
+    <color name="hai">#828282</color>
+    <color name="sangosyu">#F17C67</color>
+    <color name="nae">#86C166</color>
+
+    <color name="main_bg">#272727</color>
+    <color name="csc_item">#A9A9A9</color>
+
+</resources>

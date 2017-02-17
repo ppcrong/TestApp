@@ -1,0 +1,2 @@
+include ':app', ':loglib'
+include ':permlib'
