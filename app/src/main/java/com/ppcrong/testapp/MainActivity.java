@@ -20,15 +20,16 @@ import hei.permission.PermissionActivity;
 
 public class MainActivity extends PermissionActivity {
 
-    /* Widget */
+    //region Widget
     @BindView(R.id.btn_write_log)
     Button mBtnWritingData;
     @BindView(R.id.btn_close_log_file)
     Button mBtnStopToSave;
     @BindView(R.id.btn_read_log)
     Button mBtnReadLog;
+    //endregion
 
-    /* OnClick */
+    //region OnClick
     @OnClick(R.id.btn_context_dir)
     public void onClickBtnContextDir() {
         KLog.d();
@@ -165,6 +166,7 @@ public class MainActivity extends PermissionActivity {
     public void onClickReadLog() {
         LogLib.readFile(LogLib.getExDir("Cloudchip"), "TestLogFile.txt");
     }
+    //endregion
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {

@@ -21,6 +21,6 @@ public class ExampleInstrumentedTest {
         // Context of the app under test.
         Context appContext = InstrumentationRegistry.getTargetContext();
 
-        assertEquals("com.cloudchip.ccloglib.test", appContext.getPackageName());
+        assertEquals("com.ppcrong.loglib.test", appContext.getPackageName());
     }
 }
