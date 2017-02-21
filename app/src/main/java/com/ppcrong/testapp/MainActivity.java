@@ -149,6 +149,7 @@ public class MainActivity extends PermissionActivity {
     public void onClickBtnSaveFileS() {
         sLogLib.saveFile(sLogLib.getExDir("Cloudchip"), "TestSaveFile.txt", "Hello world sssss");
         sLogLib.readFile(sLogLib.getExDir("Cloudchip"), "TestSaveFile.txt");
+        String filename = sLogLib.genFileName("Test_s", "log");
     }
 
     @OnClick(R.id.btn_open_log_file_s)
@@ -186,6 +187,7 @@ public class MainActivity extends PermissionActivity {
     public void onClickBtnSaveFile() {
         logger1.saveFile(sLogLib.getExDir("Cloudchip"), "TestSaveFile1.txt", "Hello world 11111");
         logger1.readFile(sLogLib.getExDir("Cloudchip"), "TestSaveFile1.txt");
+        String filename = logger1.genFileName("Test1", "log");
     }
 
     @OnClick(R.id.btn_open_log_file)
@@ -220,6 +222,7 @@ public class MainActivity extends PermissionActivity {
     public void onClickBtnSaveFile2() {
         logger2.saveFile(sLogLib.getExDir("Cloudchip"), "TestSaveFile2.txt", "Hello world 22222");
         logger2.readFile(sLogLib.getExDir("Cloudchip"), "TestSaveFile2.txt");
+        String filename = logger2.genFileName("Test2", "log");
     }
 
     @OnClick(R.id.btn_open_log_file2)

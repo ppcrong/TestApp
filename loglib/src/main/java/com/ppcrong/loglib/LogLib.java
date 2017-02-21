@@ -1,6 +1,7 @@
 package com.ppcrong.loglib;
 
 import android.os.Environment;
+import android.support.annotation.NonNull;
 import android.util.Log;
 
 import com.socks.library.KLog;
@@ -11,6 +12,9 @@ import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.OutputStreamWriter;
+import java.text.SimpleDateFormat;
+import java.util.Date;
+import java.util.Locale;
 
 /**
  * Log Library
@@ -26,6 +30,19 @@ public class LogLib {
      */
     public LogLib() {
 
+    }
+
+    /**
+     * Generate a file name by current time
+     * @param prefix File prefix name
+     * @param ext File extension name
+     * @return File name
+     */
+    public String genFileName(@NonNull String prefix, @NonNull String ext) {
+        SimpleDateFormat logFormat = new SimpleDateFormat("yyyyMMdd_HHmmss", Locale.US);
+        String fileName = prefix + "_" + logFormat.format(new Date()) + "." + ext;
+        KLog.d("fileName: " + fileName);
+        return fileName;
     }
 
     /**
