@@ -8,6 +8,7 @@ import android.util.Log;
 import android.widget.Button;
 
 import com.ppcrong.loglib.LogLib;
+import com.ppcrong.loglib.sLogLib;
 import com.socks.library.KLog;
 
 import java.io.File;
@@ -21,17 +22,29 @@ import hei.permission.PermissionActivity;
 public class MainActivity extends PermissionActivity {
 
     //region Widget
+    @BindView(R.id.btn_write_log_s)
+    Button mBtnWritingData_s;
+    @BindView(R.id.btn_close_log_file_s)
+    Button mBtnStopToSave_s;
+    @BindView(R.id.btn_read_log_s)
+    Button mBtnReadLog_s;
     @BindView(R.id.btn_write_log)
     Button mBtnWritingData;
     @BindView(R.id.btn_close_log_file)
     Button mBtnStopToSave;
     @BindView(R.id.btn_read_log)
     Button mBtnReadLog;
+    @BindView(R.id.btn_write_log2)
+    Button mBtnWritingData2;
+    @BindView(R.id.btn_close_log_file2)
+    Button mBtnStopToSave2;
+    @BindView(R.id.btn_read_log2)
+    Button mBtnReadLog2;
     //endregion
 
     //region OnClick
-    @OnClick(R.id.btn_context_dir)
-    public void onClickBtnContextDir() {
+    @OnClick(R.id.btn_context_dir_s)
+    public void onClickBtnContextDirS() {
         KLog.d();
 
         /* getFilesDir */
@@ -102,8 +115,8 @@ public class MainActivity extends PermissionActivity {
 
     }
 
-    @OnClick(R.id.btn_env_dir)
-    public void onClickBtnEnvDir() {
+    @OnClick(R.id.btn_env_dir_s)
+    public void onClickBtnEnvDirS() {
         KLog.d();
 
         /* getExternalStorageDirectory */
@@ -132,31 +145,67 @@ public class MainActivity extends PermissionActivity {
 
     }
 
+    @OnClick(R.id.btn_save_file_s)
+    public void onClickBtnSaveFileS() {
+        sLogLib.saveFile(sLogLib.getExDir("Cloudchip"), "TestSaveFile.txt", "Hello world sssss");
+        sLogLib.readFile(sLogLib.getExDir("Cloudchip"), "TestSaveFile.txt");
+    }
+
+    @OnClick(R.id.btn_open_log_file_s)
+    public void onClickBtnOpenLogFileS() {
+        boolean b = sLogLib.openLogFile(sLogLib.getExDir("Cloudchip"), "TestLogFile.txt");
+        KLog.d(TestApp.LOG_TAG, "openLogFile " + (b ? "ok" : "fail"));
+        mBtnWritingData_s.setEnabled(b);
+        mBtnStopToSave_s.setEnabled(b);
+        mBtnReadLog_s.setEnabled(!b);
+    }
+
+    int nLog = 0;
+    @OnClick(R.id.btn_write_log_s)
+    public void onClickBtnWriteLogS() {
+        nLog++;
+        sLogLib.writeLog("Logging data" + nLog + System.getProperty("line.separator"));
+    }
+
+    @OnClick(R.id.btn_close_log_file_s)
+    public void onClickBtnCloseLogFileS() {
+        sLogLib.closeLogFile();
+        mBtnWritingData_s.setEnabled(false);
+        mBtnStopToSave_s.setEnabled(false);
+        mBtnReadLog_s.setEnabled(true);
+    }
+
+    @OnClick(R.id.btn_read_log_s)
+    public void onClickReadLogS() {
+        sLogLib.readFile(sLogLib.getExDir("Cloudchip"), "TestLogFile.txt");
+    }
+
+    LogLib logger1 = new LogLib();
+    LogLib logger2 = new LogLib();
     @OnClick(R.id.btn_save_file)
     public void onClickBtnSaveFile() {
-        LogLib.saveFile(LogLib.getExDir("Cloudchip"), "TestSaveFile.txt", "Hello world");
-        LogLib.readFile(LogLib.getExDir("Cloudchip"), "TestSaveFile.txt");
+        logger1.saveFile(sLogLib.getExDir("Cloudchip"), "TestSaveFile1.txt", "Hello world 11111");
+        logger1.readFile(sLogLib.getExDir("Cloudchip"), "TestSaveFile1.txt");
     }
 
     @OnClick(R.id.btn_open_log_file)
     public void onClickBtnOpenLogFile() {
-        boolean b = LogLib.openLogFile(LogLib.getExDir("Cloudchip"), "TestLogFile.txt");
+        boolean b = logger1.openLogFile(sLogLib.getExDir("Cloudchip"), "TestLogFile1.txt");
         KLog.d(TestApp.LOG_TAG, "openLogFile " + (b ? "ok" : "fail"));
         mBtnWritingData.setEnabled(b);
         mBtnStopToSave.setEnabled(b);
         mBtnReadLog.setEnabled(!b);
     }
 
-    int nLog = 0;
     @OnClick(R.id.btn_write_log)
     public void onClickBtnWriteLog() {
         nLog++;
-        LogLib.writeLog("Logging data" + nLog + System.getProperty("line.separator"));
+        logger1.writeLog("Logging data" + nLog + System.getProperty("line.separator"));
     }
 
     @OnClick(R.id.btn_close_log_file)
     public void onClickBtnCloseLogFile() {
-        LogLib.closeLogFile();
+        logger1.closeLogFile();
         mBtnWritingData.setEnabled(false);
         mBtnStopToSave.setEnabled(false);
         mBtnReadLog.setEnabled(true);
@@ -164,10 +213,45 @@ public class MainActivity extends PermissionActivity {
 
     @OnClick(R.id.btn_read_log)
     public void onClickReadLog() {
-        LogLib.readFile(LogLib.getExDir("Cloudchip"), "TestLogFile.txt");
+        logger2.readFile(sLogLib.getExDir("Cloudchip"), "TestLogFile1.txt");
+    }
+
+    @OnClick(R.id.btn_save_file2)
+    public void onClickBtnSaveFile2() {
+        logger2.saveFile(sLogLib.getExDir("Cloudchip"), "TestSaveFile2.txt", "Hello world 22222");
+        logger2.readFile(sLogLib.getExDir("Cloudchip"), "TestSaveFile2.txt");
+    }
+
+    @OnClick(R.id.btn_open_log_file2)
+    public void onClickBtnOpenLogFile2() {
+        boolean b = logger2.openLogFile(sLogLib.getExDir("Cloudchip"), "TestLogFile2.txt");
+        KLog.d(TestApp.LOG_TAG, "openLogFile " + (b ? "ok" : "fail"));
+        mBtnWritingData2.setEnabled(b);
+        mBtnStopToSave2.setEnabled(b);
+        mBtnReadLog2.setEnabled(!b);
+    }
+
+    @OnClick(R.id.btn_write_log2)
+    public void onClickBtnWriteLog2() {
+        nLog++;
+        logger2.writeLog("Logging data" + nLog + System.getProperty("line.separator"));
+    }
+
+    @OnClick(R.id.btn_close_log_file2)
+    public void onClickBtnCloseLogFile2() {
+        logger2.closeLogFile();
+        mBtnWritingData2.setEnabled(false);
+        mBtnStopToSave2.setEnabled(false);
+        mBtnReadLog2.setEnabled(true);
+    }
+
+    @OnClick(R.id.btn_read_log2)
+    public void onClickReadLog2() {
+        logger2.readFile(sLogLib.getExDir("Cloudchip"), "TestLogFile2.txt");
     }
     //endregion
 
+    //region Life cycle
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         KLog.d();
@@ -183,4 +267,5 @@ public class MainActivity extends PermissionActivity {
             }
         }, R.string.rationale, Manifest.permission.WRITE_EXTERNAL_STORAGE);
     }
+    //endregion
 }

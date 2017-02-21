@@ -13,20 +13,13 @@ import java.io.IOException;
 import java.io.OutputStreamWriter;
 
 /**
- * Log Library
+ * Static Log Library
  */
-public class LogLib {
+public class sLogLib {
 
     //region External Storage
 
     //region Common
-
-    /**
-     * Ctor
-     */
-    public LogLib() {
-
-    }
 
     /**
      * Create directory in external storage
@@ -34,7 +27,7 @@ public class LogLib {
      * @param subDir The subfolder in external storage
      * @return The directory
      */
-    public File getExDir(String subDir) {
+    public static File getExDir(String subDir) {
         KLog.d("subDir: " + subDir);
         // Get the subFolder of external storage.
         File file = new File(Environment.getExternalStorageDirectory(), subDir);
@@ -51,7 +44,7 @@ public class LogLib {
      *
      * @return true is writable, false is not
      */
-    public boolean isExternalStorageWritable() {
+    public static boolean isExternalStorageWritable() {
         String state = Environment.getExternalStorageState();
         if (Environment.MEDIA_MOUNTED.equals(state)) {
             return true;
@@ -65,7 +58,7 @@ public class LogLib {
      *
      * @return true is readable, false is not
      */
-    public boolean isExternalStorageReadable() {
+    public static boolean isExternalStorageReadable() {
         String state = Environment.getExternalStorageState();
         if (Environment.MEDIA_MOUNTED.equals(state) ||
                 Environment.MEDIA_MOUNTED_READ_ONLY.equals(state)) {
@@ -77,10 +70,10 @@ public class LogLib {
     //endregion
 
     //region Logging
-    private Object mLock = new Object();
-    private File fileLog = null;
-    private FileOutputStream mFileOutputStream = null;
-    private OutputStreamWriter mOutputStreamWriter = null;
+    private static Object mLock = new Object();
+    private static File fileLog = null;
+    private static FileOutputStream mFileOutputStream = null;
+    private static OutputStreamWriter mOutputStreamWriter = null;
 
     /**
      * Open/Create log file
@@ -89,7 +82,7 @@ public class LogLib {
      * @param fileName The log file name
      * @return true is open ok, false is open fail
      */
-    public boolean openLogFile(File fileDir, String fileName) {
+    public static boolean openLogFile(File fileDir, String fileName) {
         KLog.d("fileLog: " + fileDir.getPath() + File.separator + fileName);
 
         boolean bRet = false;
@@ -125,7 +118,7 @@ public class LogLib {
      *
      * @param data The data to write
      */
-    public void writeLog(String data) {
+    public static void writeLog(String data) {
         synchronized (mLock) {
             try {
                 if (mOutputStreamWriter != null) mOutputStreamWriter.write(data);
@@ -138,7 +131,7 @@ public class LogLib {
     /**
      * Close log file
      */
-    public void closeLogFile() {
+    public static void closeLogFile() {
         if (fileLog == null) {
             KLog.d("fileLog is null ");
             return;
@@ -173,7 +166,7 @@ public class LogLib {
      * @param fileName The file to save
      * @param data     The data to save
      */
-    synchronized public void saveFile(File fileDir, String fileName, String data) {
+    synchronized public static void saveFile(File fileDir, String fileName, String data) {
         KLog.d("file: " + fileDir.getPath() + File.separator + fileName);
         if (isExternalStorageWritable()) {
             writeToFile(fileDir, fileName, data);
@@ -187,7 +180,7 @@ public class LogLib {
      * @param fileName The file to save
      * @param data     The data to write
      */
-    synchronized private void writeToFile(File fileDir, String fileName, String data) {
+    synchronized private static void writeToFile(File fileDir, String fileName, String data) {
         KLog.d("file: " + fileDir.getPath() + File.separator + fileName);
 
         // Create file
@@ -235,7 +228,7 @@ public class LogLib {
      * @param fileName The file to read
      * @return The read data
      */
-    synchronized public String readFile(File fileDir, String fileName) {
+    synchronized public static String readFile(File fileDir, String fileName) {
         KLog.d("file: " + fileDir.getPath() + File.separator + fileName);
         if (isExternalStorageReadable()) {
             return readFromFile(fileDir, fileName);
@@ -243,7 +236,7 @@ public class LogLib {
         return "Error read file";
     }
 
-    synchronized private String readFromFile(File fileDir, String fileName) {
+    synchronized private static String readFromFile(File fileDir, String fileName) {
         KLog.d("file: " + fileDir.getPath() + File.separator + fileName);
 
         // The read file

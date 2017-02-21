@@ -1,12 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout
+<ScrollView
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/content_main"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical"
     android:paddingBottom="@dimen/activity_vertical_margin"
     android:paddingLeft="@dimen/activity_horizontal_margin"
     android:paddingRight="@dimen/activity_horizontal_margin"
@@ -15,76 +14,206 @@
     tools:context="com.ppcrong.testapp.MainActivity"
     tools:showIn="@layout/activity_main">
 
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Context"/>
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        >
 
-    <Button
-        android:id="@+id/btn_context_dir"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="ContextDir"
-        android:textAllCaps="false"/>
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:orientation="vertical">
 
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Environment"/>
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Static sLogLib"
+                android:textSize="@dimen/_16sdp"
+                android:textStyle="bold"/>
 
-    <Button
-        android:id="@+id/btn_env_dir"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="EvnDir"
-        android:textAllCaps="false"/>
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Context"/>
 
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Save file once"/>
+            <Button
+                android:id="@+id/btn_context_dir_s"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="ContextDir"
+                android:textAllCaps="false"/>
 
-    <Button
-        android:id="@+id/btn_save_file"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="SaveFile"
-        android:textAllCaps="false"/>
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Environment"/>
 
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Logging data to file"/>
+            <Button
+                android:id="@+id/btn_env_dir_s"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="EvnDir"
+                android:textAllCaps="false"/>
 
-    <Button
-        android:id="@+id/btn_open_log_file"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Create file"
-        android:textAllCaps="false"/>
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Save file once"/>
 
-    <Button
-        android:id="@+id/btn_write_log"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:enabled="false"
-        android:text="Writing data"
-        android:textAllCaps="false"/>
+            <Button
+                android:id="@+id/btn_save_file_s"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="SaveFile"
+                android:textAllCaps="false"/>
 
-    <Button
-        android:id="@+id/btn_close_log_file"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:enabled="false"
-        android:text="Stop to save"
-        android:textAllCaps="false"/>
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Logging data to file"/>
 
-    <Button
-        android:id="@+id/btn_read_log"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:enabled="false"
-        android:text="Read log"
-        android:textAllCaps="false"/>
+            <Button
+                android:id="@+id/btn_open_log_file_s"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Create file"
+                android:textAllCaps="false"/>
 
-</LinearLayout>
+            <Button
+                android:id="@+id/btn_write_log_s"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:enabled="false"
+                android:text="Writing data"
+                android:textAllCaps="false"/>
+
+            <Button
+                android:id="@+id/btn_close_log_file_s"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:enabled="false"
+                android:text="Stop to save"
+                android:textAllCaps="false"/>
+
+            <Button
+                android:id="@+id/btn_read_log_s"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:enabled="false"
+                android:text="Read log"
+                android:textAllCaps="false"/>
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:orientation="vertical">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="LogLib"
+                android:textSize="@dimen/_16sdp"
+                android:textStyle="bold"/>
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Save file1 once"/>
+
+            <Button
+                android:id="@+id/btn_save_file"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="SaveFile"
+                android:textAllCaps="false"/>
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Logging data to file1"/>
+
+            <Button
+                android:id="@+id/btn_open_log_file"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Create file"
+                android:textAllCaps="false"/>
+
+            <Button
+                android:id="@+id/btn_write_log"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:enabled="false"
+                android:text="Writing data"
+                android:textAllCaps="false"/>
+
+            <Button
+                android:id="@+id/btn_close_log_file"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:enabled="false"
+                android:text="Stop to save"
+                android:textAllCaps="false"/>
+
+            <Button
+                android:id="@+id/btn_read_log"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:enabled="false"
+                android:text="Read log"
+                android:textAllCaps="false"/>
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Save file2 once"/>
+
+            <Button
+                android:id="@+id/btn_save_file2"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="SaveFile"
+                android:textAllCaps="false"/>
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Logging data to file2"/>
+
+            <Button
+                android:id="@+id/btn_open_log_file2"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Create file"
+                android:textAllCaps="false"/>
+
+            <Button
+                android:id="@+id/btn_write_log2"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:enabled="false"
+                android:text="Writing data"
+                android:textAllCaps="false"/>
+
+            <Button
+                android:id="@+id/btn_close_log_file2"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:enabled="false"
+                android:text="Stop to save"
+                android:textAllCaps="false"/>
+
+            <Button
+                android:id="@+id/btn_read_log2"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:enabled="false"
+                android:text="Read log"
+                android:textAllCaps="false"/>
+        </LinearLayout>
+
+    </LinearLayout>
+</ScrollView>
