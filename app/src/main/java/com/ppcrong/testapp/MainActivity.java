@@ -170,7 +170,8 @@ public class MainActivity extends PermissionActivity {
 
     @OnClick(R.id.btn_close_log_file_s)
     public void onClickBtnCloseLogFileS() {
-        sLogLib.closeLogFile();
+        String path = sLogLib.closeLogFileReturnPath();
+        KLog.d("path: " + path);
         mBtnWritingData_s.setEnabled(false);
         mBtnStopToSave_s.setEnabled(false);
         mBtnReadLog_s.setEnabled(true);
@@ -207,7 +208,8 @@ public class MainActivity extends PermissionActivity {
 
     @OnClick(R.id.btn_close_log_file)
     public void onClickBtnCloseLogFile() {
-        logger1.closeLogFile();
+        String path = logger1.closeLogFileReturnPath();
+        KLog.d("path: " + path);
         mBtnWritingData.setEnabled(false);
         mBtnStopToSave.setEnabled(false);
         mBtnReadLog.setEnabled(true);
@@ -242,7 +244,8 @@ public class MainActivity extends PermissionActivity {
 
     @OnClick(R.id.btn_close_log_file2)
     public void onClickBtnCloseLogFile2() {
-        logger2.closeLogFile();
+        String path = logger2.closeLogFileReturnPath();
+        KLog.d("path: " + path);
         mBtnWritingData2.setEnabled(false);
         mBtnStopToSave2.setEnabled(false);
         mBtnReadLog2.setEnabled(true);

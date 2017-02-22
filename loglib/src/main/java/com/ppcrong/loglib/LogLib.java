@@ -174,10 +174,43 @@ public class LogLib {
                         KLog.e(Log.getStackTraceString(e));
                     } finally {
                         mOutputStreamWriter = null;
+                        fileLog = null;
                     }
                 }
             }
         }
+    }
+
+    /**
+     * Close log file and return path
+     * @return File path
+     */
+    public String closeLogFileReturnPath() {
+        if (fileLog == null) {
+            KLog.d("fileLog is null ");
+            return "";
+        }
+        String path = fileLog.getPath();
+        KLog.d("fileLog: " + path);
+        synchronized (mLock) {
+            if (mOutputStreamWriter != null) {
+                try {
+                    mOutputStreamWriter.flush();
+                } catch (IOException e) {
+                    KLog.e(Log.getStackTraceString(e));
+                } finally {
+                    try {
+                        mOutputStreamWriter.close();
+                    } catch (IOException e) {
+                        KLog.e(Log.getStackTraceString(e));
+                    } finally {
+                        mOutputStreamWriter = null;
+                        fileLog = null;
+                    }
+                }
+            }
+        }
+        return path;
     }
     //endregion
 
