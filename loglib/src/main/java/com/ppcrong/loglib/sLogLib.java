@@ -84,6 +84,20 @@ public class sLogLib {
         KLog.d("External Storage isn't readable");
         return false;
     }
+
+    public static void deleteAllFiles(String dir) {
+        KLog.d("Directory = " + dir);
+        File fileDir = new File(dir);
+        if (fileDir.isDirectory())
+        {
+            String[] children = fileDir.list();
+            for (int i = 0; i < children.length; i++)
+            {
+                boolean b = new File(fileDir, children[i]).delete();
+                KLog.d("Delete " + children[i] + " " + (b ? "ok" : "fail"));
+            }
+        }
+    }
     //endregion
 
     //region Logging
