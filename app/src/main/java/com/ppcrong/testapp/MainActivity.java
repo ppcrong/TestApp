@@ -1,32 +1,19 @@
 package com.ppcrong.testapp;
 
-import android.Manifest;
 import android.content.Intent;
-import android.hardware.Sensor;
-import android.hardware.SensorManager;
 import android.os.Bundle;
-import android.os.Environment;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
-import android.util.Log;
 import android.widget.Button;
 
-import com.ppcrong.loglib.LogLib;
-import com.ppcrong.loglib.sLogLib;
 import com.ppcrong.testapp.activity.LogLibActivity;
 import com.ppcrong.testapp.activity.SensorActivity;
-import com.ppcrong.testapp.utils.Utils;
+import com.ppcrong.utils.Utils;
 import com.socks.library.KLog;
-
-import java.io.File;
-import java.io.IOException;
-import java.util.List;
-import java.util.Locale;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
-import hei.permission.PermissionActivity;
 
 public class MainActivity extends AppCompatActivity {
 

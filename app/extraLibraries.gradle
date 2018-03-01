@@ -9,6 +9,8 @@ ext {
             // For Android-M permission
             project(':..:..:libs:permlib'),
             // LogLib
-            project(':..:..:libs:loglib')
+            project(':..:..:libs:loglib'),
+            // Utils
+            project(':..:..:libs:utils')
     ]
 }
