@@ -1,18 +1,18 @@
 apply plugin: 'com.android.application'
 def extraLibraryFile = new File("${project.projectDir}/extraLibraries.gradle")
-if(extraLibraryFile.exists()){
+if (extraLibraryFile.exists()) {
     apply from: "${project.projectDir}/extraLibraries.gradle"
 }
 
 android {
-    compileSdkVersion 25
-    buildToolsVersion "25.0.2"
+    compileSdkVersion 26
+    buildToolsVersion "27.0.3"
     defaultConfig {
         applicationId "com.ppcrong.testapp"
         minSdkVersion 21
-        targetSdkVersion 25
-        versionCode 1702101120
-        versionName "1.000.000"
+        targetSdkVersion 26
+        versionCode 1803011200
+        versionName "1.000.001"
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
     }
     signingConfigs {
@@ -44,21 +44,25 @@ android {
         }
     }
 
+    compileOptions {
+        targetCompatibility JavaVersion.VERSION_1_8
+        sourceCompatibility JavaVersion.VERSION_1_8
+    }
 }
 
 dependencies {
-    compile fileTree(dir: 'libs', include: ['*.jar'])
-    androidTestCompile('com.android.support.test.espresso:espresso-core:2.2.2', {
-        exclude group: 'com.android.support', module: 'support-annotations'
-    })
-    compile 'com.android.support:appcompat-v7:25.3.0'
-    compile 'com.android.support:design:25.3.0'
-    testCompile 'junit:junit:4.12'
+    implementation fileTree(dir: 'libs', include: ['*.jar'])
+    implementation 'com.android.support:appcompat-v7:26.1.0'
+    implementation 'com.android.support:design:26.1.0'
+    implementation 'com.android.support.constraint:constraint-layout:1.0.2'
+    testImplementation 'junit:junit:4.12'
+    androidTestImplementation 'com.android.support.test:runner:1.0.1'
+    androidTestImplementation 'com.android.support.test.espresso:espresso-core:3.0.1'
 
-    if (extraLibraryFile.exists()){
-        extraLibrary.each{compile it}
+    if (extraLibraryFile.exists()) {
+        extraLibrary.each { implementation it }
     }
 
-    // For butterknife
-    annotationProcessor 'com.jakewharton:butterknife-compiler:8.5.1'
+    // Butter Knife
+    annotationProcessor 'com.jakewharton:butterknife-compiler:8.6.0'
 }
