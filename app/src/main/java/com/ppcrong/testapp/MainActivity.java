@@ -8,7 +8,7 @@ import android.widget.Button;
 
 import com.ppcrong.testapp.activity.LogLibActivity;
 import com.ppcrong.testapp.activity.SensorActivity;
-import com.ppcrong.utils.Utils;
+import com.ppcrong.utils.MiscUtils;
 import com.socks.library.KLog;
 
 import butterknife.BindView;
@@ -65,14 +65,14 @@ public class MainActivity extends AppCompatActivity {
 
         Intent pageIntent = new Intent();
         pageIntent.setClass(this, LogLibActivity.class);
-        Utils.startSafeIntent(this, pageIntent);
+        MiscUtils.startSafeIntent(this, pageIntent);
     }
 
     private void showSensorActivity() {
 
         Intent pageIntent = new Intent();
         pageIntent.setClass(this, SensorActivity.class);
-        Utils.startSafeIntent(this, pageIntent);
+        MiscUtils.startSafeIntent(this, pageIntent);
     }
     // endregion [Private Function]
 }
