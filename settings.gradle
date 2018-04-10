@@ -1,4 +1,7 @@
 include ':app'
-include ':..:..:libs:loglib'
-include ':..:..:libs:permlib'
-include ':..:..:libs:utils'
+include ':loglib'
+project(":loglib").projectDir = file("../../libs/loglib")
+include ':permlib'
+project(":permlib").projectDir = file("../../libs/permlib")
+include ':utils'
+project(":utils").projectDir = file("../../libs/utils")
