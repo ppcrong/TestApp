@@ -6,8 +6,8 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     app:layout_behavior="@string/appbar_scrolling_view_behavior"
-    tools:context="com.ppcrong.testapp.MainActivity"
-    tools:showIn="@layout/activity_main">
+    tools:context=".activity.TimezoneActivity"
+    tools:showIn="@layout/activity_timezone">
 
     <android.support.v4.widget.NestedScrollView
         android:layout_width="match_parent"
@@ -23,26 +23,12 @@
             android:orientation="vertical">
 
             <Button
-                android:id="@+id/btn_log_lib"
+                android:id="@+id/btn_list_timezone"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="Test loglib"
+                android:text="List timezone"
                 android:textAllCaps="false"/>
 
-            <Button
-                android:id="@+id/btn_sensor"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:text="Test sensor"
-                android:textAllCaps="false"/>
-
-            <Button
-                android:id="@+id/btn_timezone"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:text="Test timezone"
-                android:textAllCaps="false"/>
         </LinearLayout>
     </android.support.v4.widget.NestedScrollView>
 </android.support.constraint.ConstraintLayout>
-

@@ -8,6 +8,7 @@ import android.widget.Button;
 
 import com.ppcrong.testapp.activity.LogLibActivity;
 import com.ppcrong.testapp.activity.SensorActivity;
+import com.ppcrong.testapp.activity.TimezoneActivity;
 import com.ppcrong.utils.MiscUtils;
 import com.socks.library.KLog;
 
@@ -16,13 +17,6 @@ import butterknife.ButterKnife;
 import butterknife.OnClick;
 
 public class MainActivity extends AppCompatActivity {
-
-    // region [Widget]
-    @BindView(R.id.btn_log_lib)
-    Button mBtnLogLib;
-    @BindView(R.id.btn_sensor)
-    Button mBtnSensor;
-    // endregion [Widget]
 
     // region [OnClick]
     @OnClick(R.id.btn_log_lib)
@@ -39,6 +33,14 @@ public class MainActivity extends AppCompatActivity {
         KLog.i();
 
         showSensorActivity();
+    }
+
+    @OnClick(R.id.btn_timezone)
+    public void onClickBtnTimezone() {
+
+        KLog.i();
+
+        showTimezoneActivity();
     }
     // region [OnClick]
 
@@ -72,6 +74,13 @@ public class MainActivity extends AppCompatActivity {
 
         Intent pageIntent = new Intent();
         pageIntent.setClass(this, SensorActivity.class);
+        MiscUtils.startSafeIntent(this, pageIntent);
+    }
+
+    private void showTimezoneActivity() {
+
+        Intent pageIntent = new Intent();
+        pageIntent.setClass(this, TimezoneActivity.class);
         MiscUtils.startSafeIntent(this, pageIntent);
     }
     // endregion [Private Function]
