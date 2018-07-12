@@ -3,7 +3,7 @@ ext {
             // KLog
             'com.github.zhaokaiqiang.klog:library:1.6.0',
             // Butter Knife
-            'com.jakewharton:butterknife:8.6.0',
+            'com.jakewharton:butterknife:8.8.1',
             // For size
             'com.intuit.sdp:sdp-android:1.0.3',
             // For Android-M permission
