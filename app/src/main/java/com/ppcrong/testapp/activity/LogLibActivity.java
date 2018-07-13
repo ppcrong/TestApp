@@ -3,12 +3,14 @@ package com.ppcrong.testapp.activity;
 import android.Manifest;
 import android.os.Bundle;
 import android.os.Environment;
+import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.widget.Button;
 
 import com.ppcrong.loglib.LogLib;
 import com.ppcrong.loglib.sLogLib;
+import com.ppcrong.rxpermlib.RxPermLib;
 import com.ppcrong.testapp.R;
 import com.ppcrong.testapp.TestApp;
 import com.socks.library.KLog;
@@ -19,9 +21,8 @@ import java.io.IOException;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
-import hei.permission.PermissionActivity;
 
-public class LogLibActivity extends PermissionActivity {
+public class LogLibActivity extends AppCompatActivity {
 
     // region [Widget]
     @BindView(R.id.btn_write_log_s)
@@ -299,8 +300,10 @@ public class LogLibActivity extends PermissionActivity {
         Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
-        checkPermission(() -> {
-        }, R.string.rationale, Manifest.permission.WRITE_EXTERNAL_STORAGE);
+        RxPermLib.checkPermissions(this, () -> {
+
+            KLog.i("WRITE_EXTERNAL_STORAGE granted");
+        }, Manifest.permission.WRITE_EXTERNAL_STORAGE);
     }
     // endregion [Private Function]
 }

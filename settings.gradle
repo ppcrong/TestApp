@@ -1,7 +1,7 @@
 include ':app'
 include ':loglib'
 project(":loglib").projectDir = file("../../libs/loglib")
-include ':permlib'
-project(":permlib").projectDir = file("../../libs/permlib")
+include ':rxpermlib'
+project(":rxpermlib").projectDir = file("../../libs/rxpermlib")
 include ':utils'
 project(":utils").projectDir = file("../../libs/utils")

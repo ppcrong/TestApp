@@ -4,9 +4,11 @@ import android.Manifest;
 import android.hardware.Sensor;
 import android.hardware.SensorManager;
 import android.os.Bundle;
+import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.widget.Button;
 
+import com.ppcrong.rxpermlib.RxPermLib;
 import com.ppcrong.testapp.R;
 import com.socks.library.KLog;
 
@@ -16,9 +18,8 @@ import java.util.Locale;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
-import hei.permission.PermissionActivity;
 
-public class SensorActivity extends PermissionActivity {
+public class SensorActivity extends AppCompatActivity {
 
     // region [Variable]
     SensorManager mSensorManager;
@@ -65,8 +66,10 @@ public class SensorActivity extends PermissionActivity {
         Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
-        checkPermission(() -> {
-        }, R.string.rationale, Manifest.permission.BODY_SENSORS);
+        RxPermLib.checkPermissions(this, () -> {
+
+            KLog.i("BODY_SENSORS granted");
+        }, Manifest.permission.BODY_SENSORS);
     }
     // endregion [Private Function]
 }
