@@ -46,7 +46,7 @@ public class SensorActivity extends AppCompatActivity {
 
         KLog.i("=== LIST AVAILABLE SENSORS ===");
     }
-    // region [OnClick]
+    // endregion [OnClick]
 
     // region [Life Cycle]
     @Override

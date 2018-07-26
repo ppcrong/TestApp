@@ -55,7 +55,7 @@ public class TimezoneActivity extends AppCompatActivity {
             }
         }
     }
-    // region [OnClick]
+    // endregion [OnClick]
 
     // region [Life Cycle]
     @Override
