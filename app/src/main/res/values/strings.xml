@@ -3,4 +3,5 @@
     <string name="title_activity_log_lib">LogLibActivity</string>
     <string name="title_activity_sensor">SensorActivity</string>
     <string name="title_activity_timezone">TimezoneActivity</string>
+    <string name="title_activity_rx_java2">RxJava2Activity</string>
 </resources>

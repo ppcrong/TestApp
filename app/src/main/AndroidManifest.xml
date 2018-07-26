@@ -37,6 +37,11 @@
             android:label="@string/title_activity_timezone"
             android:theme="@style/AppTheme.NoActionBar">
         </activity>
+        <activity
+            android:name=".activity.RxJava2Activity"
+            android:label="@string/title_activity_rx_java2"
+            android:theme="@style/AppTheme.NoActionBar">
+        </activity>
     </application>
 
 </manifest>

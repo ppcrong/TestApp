@@ -6,6 +6,10 @@ ext {
             'com.jakewharton:butterknife:8.8.1',
             // For size
             'com.intuit.sdp:sdp-android:1.0.3',
+            // rxandroid
+            'io.reactivex.rxjava2:rxandroid:2.0.2',
+            // rxjava2
+            'io.reactivex.rxjava2:rxjava:2.1.17',
             // For Android-M permission
             project(':rxpermlib'),
             // LogLib

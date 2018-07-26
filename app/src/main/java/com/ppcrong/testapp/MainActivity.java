@@ -7,6 +7,7 @@ import android.support.v7.widget.Toolbar;
 import android.widget.Button;
 
 import com.ppcrong.testapp.activity.LogLibActivity;
+import com.ppcrong.testapp.activity.RxJava2Activity;
 import com.ppcrong.testapp.activity.SensorActivity;
 import com.ppcrong.testapp.activity.TimezoneActivity;
 import com.ppcrong.utils.MiscUtils;
@@ -41,6 +42,14 @@ public class MainActivity extends AppCompatActivity {
         KLog.i();
 
         showTimezoneActivity();
+    }
+
+    @OnClick(R.id.btn_rxjava2)
+    public void onClickBtnRxJava2() {
+
+        KLog.i();
+
+        showRxJava2Activity();
     }
     // region [OnClick]
 
@@ -81,6 +90,13 @@ public class MainActivity extends AppCompatActivity {
 
         Intent pageIntent = new Intent();
         pageIntent.setClass(this, TimezoneActivity.class);
+        MiscUtils.startSafeIntent(this, pageIntent);
+    }
+
+    private void showRxJava2Activity() {
+
+        Intent pageIntent = new Intent();
+        pageIntent.setClass(this, RxJava2Activity.class);
         MiscUtils.startSafeIntent(this, pageIntent);
     }
     // endregion [Private Function]

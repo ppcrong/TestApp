@@ -6,8 +6,8 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     app:layout_behavior="@string/appbar_scrolling_view_behavior"
-    tools:context="com.ppcrong.testapp.MainActivity"
-    tools:showIn="@layout/activity_main">
+    tools:context=".activity.RxJava2Activity"
+    tools:showIn="@layout/activity_rx_java2">
 
     <android.support.v4.widget.NestedScrollView
         android:layout_width="match_parent"
@@ -23,33 +23,29 @@
             android:orientation="vertical">
 
             <Button
-                android:id="@+id/btn_log_lib"
+                android:id="@+id/btn_section1_1"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="Test loglib"
+                android:text="(1_1)"
                 android:textAllCaps="false"/>
-
             <Button
-                android:id="@+id/btn_sensor"
+                android:id="@+id/btn_section1_2"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="Test sensor"
+                android:text="(1_2)"
                 android:textAllCaps="false"/>
-
             <Button
-                android:id="@+id/btn_timezone"
+                android:id="@+id/btn_section1_3"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="Test timezone"
+                android:text="(1_3)"
                 android:textAllCaps="false"/>
-
             <Button
-                android:id="@+id/btn_rxjava2"
+                android:id="@+id/btn_section1_4"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="Test rxjava2"
+                android:text="(1_4)"
                 android:textAllCaps="false"/>
         </LinearLayout>
     </android.support.v4.widget.NestedScrollView>
 </android.support.constraint.ConstraintLayout>
-
