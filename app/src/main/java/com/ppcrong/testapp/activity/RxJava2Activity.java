@@ -248,7 +248,7 @@ public class RxJava2Activity extends AppCompatActivity {
     }
     // endregion [Section2]
 
-    // region [Section3]
+    // region [Section3] https://www.jianshu.com/p/128e662906af
     @OnClick(R.id.btn_section3_1)
     public void onClickBtnSection3_1() {
 
@@ -293,6 +293,54 @@ public class RxJava2Activity extends AppCompatActivity {
                 }
                 return Observable.fromIterable(list).delay(10, TimeUnit.MILLISECONDS);
                 // return Observable.just("I am value " + integer);
+            }
+        }).subscribe(new Consumer<String>() {
+            @Override
+            public void accept(String s) throws Exception {
+                Log.d(TAG, s);
+            }
+        });
+    }
+
+    @OnClick(R.id.btn_section3_2_ex)
+    public void onClickBtnSection3_2_Ex() {
+
+        // Reference from https://goo.gl/dGMX5v
+
+        Observable.create(new ObservableOnSubscribe<Integer>() {
+            @Override
+            public void subscribe(ObservableEmitter<Integer> emitter) throws Exception {
+
+                // Use sequence call, result is from 0~4
+//                emitter.onNext(0);
+//                emitter.onNext(1);
+//                emitter.onNext(2);
+//                emitter.onNext(3);
+//                emitter.onNext(4);
+
+                // Use for loop, result is random order
+                for(int i = 0 ; i < 5 ; i++){
+                    emitter.onNext(i);
+                }
+            }
+        }).flatMap(new Function<Integer, ObservableSource<String>>() {
+//        }).concatMap(new Function<Integer, ObservableSource<String>>() {
+            @Override
+            public ObservableSource<String> apply(Integer integer) throws Exception {
+
+//                return Observable.just("I am value " + integer).delay((int)(1000 * Math.random()),TimeUnit.MILLISECONDS);
+                return getFromRemote(integer).delay(100 ,TimeUnit.MILLISECONDS);
+            }
+
+            private Observable<String> getFromRemote(final int i){
+                return Observable.create(
+                        new ObservableOnSubscribe<String>() {
+
+                            @Override
+                            public void subscribe(ObservableEmitter<String> emitter){
+                                emitter.onNext("The new value:" + i);
+                            }
+                        });
             }
         }).subscribe(new Consumer<String>() {
             @Override
