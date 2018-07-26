@@ -8,15 +8,21 @@ import android.util.Log;
 import com.ppcrong.testapp.R;
 import com.socks.library.KLog;
 
+import java.util.ArrayList;
+import java.util.List;
+import java.util.concurrent.TimeUnit;
+
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 import io.reactivex.Observable;
 import io.reactivex.ObservableEmitter;
 import io.reactivex.ObservableOnSubscribe;
+import io.reactivex.ObservableSource;
 import io.reactivex.Observer;
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.disposables.Disposable;
 import io.reactivex.functions.Consumer;
+import io.reactivex.functions.Function;
 import io.reactivex.schedulers.Schedulers;
 
 public class RxJava2Activity extends AppCompatActivity {
@@ -241,6 +247,61 @@ public class RxJava2Activity extends AppCompatActivity {
                 .subscribe(consumer);
     }
     // endregion [Section2]
+
+    // region [Section3]
+    @OnClick(R.id.btn_section3_1)
+    public void onClickBtnSection3_1() {
+
+        Observable.create(new ObservableOnSubscribe<Integer>() {
+            @Override
+            public void subscribe(ObservableEmitter<Integer> emitter) throws Exception {
+                emitter.onNext(1);
+                emitter.onNext(2);
+                emitter.onNext(3);
+            }
+        }).map(new Function<Integer, String>() {
+            @Override
+            public String apply(Integer integer) throws Exception {
+                return "This is result " + integer;
+            }
+        }).subscribe(new Consumer<String>() {
+            @Override
+            public void accept(String s) throws Exception {
+                Log.d(TAG, s);
+            }
+        });
+    }
+
+    @OnClick(R.id.btn_section3_2)
+    public void onClickBtnSection3_2() {
+
+        Observable.create(new ObservableOnSubscribe<Integer>() {
+            @Override
+            public void subscribe(ObservableEmitter<Integer> emitter) throws Exception {
+                emitter.onNext(1);
+                emitter.onNext(2);
+                emitter.onNext(3);
+            }
+        }).flatMap(new Function<Integer, ObservableSource<String>>() {
+//        }).concatMap(new Function<Integer, ObservableSource<String>>() {
+            @Override
+            public ObservableSource<String> apply(Integer integer) throws Exception {
+                final List<String> list = new ArrayList<>();
+                for (int i = 0; i < 3; i++) {
+                    list.add("I am value " + integer);
+//                    list.add("I am value " + integer + "(" + i + ")");
+                }
+                return Observable.fromIterable(list).delay(10, TimeUnit.MILLISECONDS);
+                // return Observable.just("I am value " + integer);
+            }
+        }).subscribe(new Consumer<String>() {
+            @Override
+            public void accept(String s) throws Exception {
+                Log.d(TAG, s);
+            }
+        });
+    }
+    // endregion [Section3]
     // endregion [OnClick]
 
     // region [Life Cycle]
