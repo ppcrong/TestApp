@@ -370,4 +370,5 @@ public class RxJava2Activity extends AppCompatActivity {
         Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
     }
+    // endregion [Private Function]
 }
