@@ -340,7 +340,7 @@ public class RxJava2Activity extends AppCompatActivity {
 //                emitter.onNext(4);
 
                 // Use for loop, result is random order
-                for(int i = 0 ; i < 5 ; i++){
+                for (int i = 0; i < 5; i++) {
                     emitter.onNext(i);
                 }
             }
@@ -353,12 +353,12 @@ public class RxJava2Activity extends AppCompatActivity {
                 return getFromRemote(integer).delay(100 ,TimeUnit.MILLISECONDS);
             }
 
-            private Observable<String> getFromRemote(final int i){
+            private Observable<String> getFromRemote(final int i) {
                 return Observable.create(
                         new ObservableOnSubscribe<String>() {
 
                             @Override
-                            public void subscribe(ObservableEmitter<String> emitter){
+                            public void subscribe(ObservableEmitter<String> emitter) {
                                 emitter.onNext("The new value:" + i);
                             }
                         });
