@@ -10,6 +10,7 @@ import com.socks.library.KLog;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.CopyOnWriteArrayList;
 import java.util.concurrent.TimeUnit;
 
 import butterknife.ButterKnife;
@@ -21,6 +22,7 @@ import io.reactivex.ObservableSource;
 import io.reactivex.Observer;
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.disposables.Disposable;
+import io.reactivex.functions.Action;
 import io.reactivex.functions.Consumer;
 import io.reactivex.functions.Function;
 import io.reactivex.schedulers.Schedulers;
@@ -267,6 +269,55 @@ public class RxJava2Activity extends AppCompatActivity {
                 })
                 .subscribe(consumer);
     }
+
+    @OnClick(R.id.btn_section2_4)
+    public void onClickBtnSection2_4() {
+
+        readAllRecords().subscribe(new Consumer<CopyOnWriteArrayList<Integer>>() {
+            @Override
+            public void accept(CopyOnWriteArrayList<Integer> integers) throws Exception {
+
+                Log.d(TAG, "onNext thread is :" + Thread.currentThread().getName());
+                Log.d(TAG, "onNext: " + integers);
+            }
+        }, new Consumer<Throwable>() {
+            @Override
+            public void accept(Throwable throwable) throws Exception {
+
+                Log.d(TAG, "onError thread is :" + Thread.currentThread().getName());
+            }
+        }, new Action() {
+            @Override
+            public void run() throws Exception {
+
+                Log.d(TAG, "onComplete thread is :" + Thread.currentThread().getName());
+            }
+        });
+    }
+
+    public Observable<CopyOnWriteArrayList<Integer>> readAllRecords() {
+        return Observable.create(new ObservableOnSubscribe<CopyOnWriteArrayList<Integer>>() {
+            @Override
+            public void subscribe(ObservableEmitter<CopyOnWriteArrayList<Integer>> emitter) throws Exception {
+
+                Log.d(TAG, "Observable thread is : " + Thread.currentThread().getName());
+                CopyOnWriteArrayList<Integer> integers = new CopyOnWriteArrayList<>();
+
+                // Long time operation, please check UI is blocked or not
+                for (int i = 0; i < 5; i++) {
+
+                    Log.d(TAG, "add " + i);
+                    integers.add(i);
+                    Thread.sleep(2000);
+                }
+
+                Log.d(TAG, "emit integers");
+                emitter.onNext(integers);
+                Log.d(TAG, "emit complete");
+                emitter.onComplete();
+            }
+        }).subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread());
+    }
     // endregion [Section2]
 
     // region [Section3] https://www.jianshu.com/p/128e662906af
@@ -350,7 +401,7 @@ public class RxJava2Activity extends AppCompatActivity {
             public ObservableSource<String> apply(Integer integer) throws Exception {
 
 //                return Observable.just("I am value " + integer).delay((int)(1000 * Math.random()),TimeUnit.MILLISECONDS);
-                return getFromRemote(integer).delay(100 ,TimeUnit.MILLISECONDS);
+                return getFromRemote(integer).delay(100, TimeUnit.MILLISECONDS);
             }
 
             private Observable<String> getFromRemote(final int i) {
