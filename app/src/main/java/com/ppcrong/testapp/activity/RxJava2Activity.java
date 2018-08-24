@@ -224,9 +224,30 @@ public class RxJava2Activity extends AppCompatActivity {
             }
         };
 
-//        observable.subscribeOn(Schedulers.newThread())
-//                .observeOn(AndroidSchedulers.mainThread())
-//                .subscribe(consumer);
+        observable.subscribeOn(Schedulers.newThread())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(consumer);
+    }
+
+    @OnClick(R.id.btn_section2_3)
+    public void onClickBtnSection2_3() {
+
+        Observable<Integer> observable = Observable.create(new ObservableOnSubscribe<Integer>() {
+            @Override
+            public void subscribe(ObservableEmitter<Integer> emitter) throws Exception {
+                Log.d(TAG, "Observable thread is : " + Thread.currentThread().getName());
+                Log.d(TAG, "emit 1");
+                emitter.onNext(1);
+            }
+        });
+
+        Consumer<Integer> consumer = new Consumer<Integer>() {
+            @Override
+            public void accept(Integer integer) throws Exception {
+                Log.d(TAG, "Observer thread is :" + Thread.currentThread().getName());
+                Log.d(TAG, "onNext: " + integer);
+            }
+        };
 
         observable.subscribeOn(Schedulers.newThread())
                 .subscribeOn(Schedulers.io())
