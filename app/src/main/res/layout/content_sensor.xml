@@ -29,6 +29,13 @@
                 android:text="List sensors"
                 android:textAllCaps="false"/>
 
+            <Button
+                android:id="@+id/btn_start_log"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Start log"
+                android:textAllCaps="false"/>
+
         </LinearLayout>
     </android.support.v4.widget.NestedScrollView>
 </android.support.constraint.ConstraintLayout>
