@@ -33,7 +33,7 @@
                 android:id="@+id/btn_start_log"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="Start log"
+                android:text="START log"
                 android:textAllCaps="false"/>
 
         </LinearLayout>

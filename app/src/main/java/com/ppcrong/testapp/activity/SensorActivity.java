@@ -20,6 +20,10 @@ import java.util.Locale;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
+import io.reactivex.Observable;
+import io.reactivex.ObservableOnSubscribe;
+import io.reactivex.android.schedulers.AndroidSchedulers;
+import io.reactivex.schedulers.Schedulers;
 
 public class SensorActivity extends AppCompatActivity implements SensorEventListener {
 
@@ -31,6 +35,8 @@ public class SensorActivity extends AppCompatActivity implements SensorEventList
 
     private final float[] mRotationMatrix = new float[9];
     private final float[] mOrientationAngles = new float[3];
+
+    private boolean mIsNowLogging = false;
     // endregion [Variable]
 
     // region [Widget]
@@ -62,9 +68,16 @@ public class SensorActivity extends AppCompatActivity implements SensorEventList
         KLog.i("=== LIST AVAILABLE SENSORS ===");
     }
 
-    @OnClick(R.id.btn_list_sensors)
+    @OnClick(R.id.btn_start_log)
     public void onClickBtnStartLog() {
 
+        if (isNowLogging()) {
+
+            stopLog();
+        } else {
+
+            startLog();
+        }
     }
     // endregion [OnClick]
 
@@ -112,6 +125,9 @@ public class SensorActivity extends AppCompatActivity implements SensorEventList
 
         // Don't receive any more updates from either sensor.
         mSensorManager.unregisterListener(this);
+
+        // Stop log when onPause
+        stopLog();
     }
     // endregion [Life Cycle]
 
@@ -160,6 +176,19 @@ public class SensorActivity extends AppCompatActivity implements SensorEventList
 
         // "mOrientationAngles" now has up-to-date information.
     }
+
+    public void updateOrientationAngles(float[] aReading, float[] mReading) {
+
+        // Update rotation matrix, which is needed to update orientation angles.
+        SensorManager.getRotationMatrix(mRotationMatrix, null,
+                aReading, mReading);
+
+        // "mRotationMatrix" now has up-to-date information.
+
+        SensorManager.getOrientation(mRotationMatrix, mOrientationAngles);
+
+        // "mOrientationAngles" now has up-to-date information.
+    }
     // endregion [Sensor]
 
     // region [Private Function]
@@ -179,6 +208,91 @@ public class SensorActivity extends AppCompatActivity implements SensorEventList
     private void initSensor() {
 
         mSensorManager = ((SensorManager) getSystemService(SENSOR_SERVICE));
+    }
+
+    private void startLog() {
+
+        mIsNowLogging = true;
+        logAllSensorData().subscribe(this::onLogNext, this::onLogException, this::onLogComplete);
+        mBtnStartLog.setText("STOP log");
+    }
+
+    private void onLogNext(Integer integer) {
+
+        KLog.i();
+    }
+
+    private void onLogException(Throwable throwable) {
+
+        KLog.i(throwable.getMessage());
+    }
+
+    private void onLogComplete() {
+
+        KLog.i("Log complete");
+    }
+
+    private Observable<Integer> logAllSensorData() {
+
+        return Observable.create((ObservableOnSubscribe<Integer>) emitter -> {
+
+            do {
+
+                // A
+                float[] aReading = new float[3];
+                System.arraycopy(mAccelerometerReading, 0, aReading,
+                        0, aReading.length);
+
+                // G
+                float[] gReading = new float[3];
+                System.arraycopy(mGyroscopeReading, 0, gReading,
+                        0, gReading.length);
+
+                // M
+                float[] mReading = new float[3];
+                System.arraycopy(mMagnetometerReading, 0, mReading,
+                        0, mReading.length);
+
+                // Calculate AHRS
+                updateOrientationAngles(aReading, mReading);
+                float[] ahrsReading = new float[3];
+                System.arraycopy(mOrientationAngles, 0, ahrsReading,
+                        0, ahrsReading.length);
+                // Convert to degrees
+                ahrsReading[0] = (float) Math.toDegrees(mOrientationAngles[0]);
+                ahrsReading[1] = (float) Math.toDegrees(mOrientationAngles[1]);
+                ahrsReading[2] = (float) Math.toDegrees(mOrientationAngles[2]);
+
+                KLog.i(String.format(Locale.getDefault(),
+                        "[LOG] %d,%.3f,%.3f,%.3f,%.3f,%.3f,%.3f,%.3f,%.3f,%.3f,%.3f,%.3f,%.3f",
+                        System.currentTimeMillis(),
+                        aReading[0], aReading[1], aReading[2],
+                        gReading[0], gReading[1], gReading[2],
+                        mReading[0], mReading[1], mReading[2],
+                        ahrsReading[0], ahrsReading[1], ahrsReading[2]));
+
+                // Write into log
+
+                // Inform subscriber
+                emitter.onNext(0);
+
+                // Delay
+                Thread.sleep(1000);
+            } while (isNowLogging());
+
+            emitter.onComplete();
+        }).subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread());
+    }
+
+    private void stopLog() {
+
+        mIsNowLogging = false;
+        mBtnStartLog.setText("START log");
+    }
+
+    private boolean isNowLogging() {
+
+        return mIsNowLogging;
     }
     // endregion [Private Function]
 }
