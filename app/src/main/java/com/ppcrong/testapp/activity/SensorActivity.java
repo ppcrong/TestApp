@@ -221,8 +221,8 @@ public class SensorActivity extends AppCompatActivity implements SensorEventList
 
         RxPermLib.checkPermissions(this, () -> {
 
-            KLog.i("BODY_SENSORS granted");
-        }, Manifest.permission.BODY_SENSORS);
+            KLog.i("BODY_SENSORS, WRITE_EXTERNAL_STORAGE granted");
+        }, Manifest.permission.BODY_SENSORS, Manifest.permission.WRITE_EXTERNAL_STORAGE);
     }
 
     private void initSensor() {
