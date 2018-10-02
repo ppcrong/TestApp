@@ -9,11 +9,18 @@ import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.widget.Button;
+import android.widget.CheckBox;
+import android.widget.EditText;
+import android.widget.TextView;
 
+import com.ppcrong.loglib.LogLib;
 import com.ppcrong.rxpermlib.RxPermLib;
 import com.ppcrong.testapp.R;
 import com.socks.library.KLog;
 
+import java.io.File;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.List;
 import java.util.Locale;
 
@@ -37,6 +44,7 @@ public class SensorActivity extends AppCompatActivity implements SensorEventList
     private final float[] mOrientationAngles = new float[3];
 
     private boolean mIsNowLogging = false;
+    private LogLib logSensor = new LogLib();
     // endregion [Variable]
 
     // region [Widget]
@@ -44,6 +52,18 @@ public class SensorActivity extends AppCompatActivity implements SensorEventList
     Button mBtnListSensors;
     @BindView(R.id.btn_start_log)
     Button mBtnStartLog;
+    @BindView(R.id.tv_log_path)
+    TextView mTvLogPath;
+    @BindView(R.id.cb_a)
+    CheckBox mCbA;
+    @BindView(R.id.cb_g)
+    CheckBox mCbG;
+    @BindView(R.id.cb_m)
+    CheckBox mCbM;
+    @BindView(R.id.cb_ahrs)
+    CheckBox mCbAhrs;
+    @BindView(R.id.edit_hz)
+    EditText mEditHz;
     // endregion [Widget]
 
     // region [OnClick]
@@ -212,9 +232,21 @@ public class SensorActivity extends AppCompatActivity implements SensorEventList
 
     private void startLog() {
 
+        // Config
         mIsNowLogging = true;
-        logAllSensorData().subscribe(this::onLogNext, this::onLogException, this::onLogComplete);
         mBtnStartLog.setText("STOP log");
+        setConfigEnable(false);
+        KLog.i("A: " + mCbA.isChecked() + ", G: " + mCbG.isChecked() +
+                ", M: " + mCbA.isChecked() + ", AHRS: " + mCbAhrs.isChecked());
+
+        // Log file
+        SimpleDateFormat logFormat = new SimpleDateFormat("yyyyMMddHHmmss", Locale.US);
+        logSensor.openLogFile(logSensor.getExDir("Cloudchip/PhoneSensorData"),
+                logFormat.format(new Date()) + "_SENSOR_" + mEditHz.getText().toString() + ".LOG");
+        logSensor.writeLog(getFirstLineString());
+
+        // Start logging
+        logAllSensorData().subscribe(this::onLogNext, this::onLogException, this::onLogComplete);
     }
 
     private void onLogNext(Integer integer) {
@@ -235,6 +267,9 @@ public class SensorActivity extends AppCompatActivity implements SensorEventList
     private Observable<Integer> logAllSensorData() {
 
         return Observable.create((ObservableOnSubscribe<Integer>) emitter -> {
+
+            long delay = mEditHz.getText().toString().isEmpty() ?
+                    100l : (1000l / Long.valueOf(mEditHz.getText().toString()));
 
             do {
 
@@ -272,27 +307,102 @@ public class SensorActivity extends AppCompatActivity implements SensorEventList
                         ahrsReading[1], ahrsReading[2], ahrsReading[0]));
 
                 // Write into log
+                logSensor.writeLog(getSensorDataString(aReading, gReading, mReading, ahrsReading));
 
                 // Inform subscriber
                 emitter.onNext(0);
 
                 // Delay
-                Thread.sleep(1000);
+                Thread.sleep(delay);
             } while (isNowLogging());
 
             emitter.onComplete();
         }).subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread());
     }
 
+    private String getSensorDataString(float[] aReading, float[] gReading, float[] mReading, float[] ahrsReading) {
+
+        StringBuilder stringBuilder = new StringBuilder(Long.toString(System.currentTimeMillis()));
+        stringBuilder.append(",");
+
+        if (mCbA.isChecked()) {
+            stringBuilder.append(String.format(Locale.getDefault(),
+                    "%.3f,%.3f,%.3f,", aReading[0], aReading[1], aReading[2]));
+        }
+
+        if (mCbG.isChecked()) {
+            stringBuilder.append(String.format(Locale.getDefault(),
+                    "%.3f,%.3f,%.3f,", gReading[0], gReading[1], gReading[2]));
+        }
+
+        if (mCbM.isChecked()) {
+            stringBuilder.append(String.format(Locale.getDefault(),
+                    "%.3f,%.3f,%.3f,", mReading[0], mReading[1], mReading[2]));
+        }
+
+        if (mCbAhrs.isChecked()) {
+            stringBuilder.append(String.format(Locale.getDefault(),
+                    "%.3f,%.3f,%.3f", ahrsReading[1], ahrsReading[2], ahrsReading[0]));
+        }
+
+        stringBuilder.append("\n");
+
+        return stringBuilder.toString();
+    }
+
+    private String getFirstLineString() {
+
+        StringBuilder stringBuilder = new StringBuilder();
+
+        if (mCbA.isChecked()) {
+            stringBuilder.append("A,");
+        }
+
+        if (mCbG.isChecked()) {
+            stringBuilder.append("G,");
+        }
+
+        if (mCbM.isChecked()) {
+            stringBuilder.append("M,");
+        }
+
+        if (mCbAhrs.isChecked()) {
+            stringBuilder.append("AHRS");
+        }
+
+        stringBuilder.append("\n");
+
+        return stringBuilder.toString();
+    }
+
     private void stopLog() {
 
+        // Config
         mIsNowLogging = false;
         mBtnStartLog.setText("START log");
+        setConfigEnable(true);
+
+        // Log
+        String logPath = logSensor.closeLogFileReturnPath();
+        if (!logPath.isEmpty()) {
+            File file = new File(logPath);
+            logPath += String.format(Locale.US, " (%.2f KB)", (file.length() / 1024f));
+            mTvLogPath.setText("Log path:\n" + logPath);
+        }
     }
 
     private boolean isNowLogging() {
 
         return mIsNowLogging;
+    }
+
+    private void setConfigEnable(boolean b) {
+
+        mCbA.setEnabled(b);
+        mCbG.setEnabled(b);
+        mCbM.setEnabled(b);
+        mCbAhrs.setEnabled(b);
+        mEditHz.setEnabled(b);
     }
     // endregion [Private Function]
 }
