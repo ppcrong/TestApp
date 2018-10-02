@@ -105,17 +105,17 @@ public class SensorActivity extends AppCompatActivity implements SensorEventList
         Sensor accelerometer = mSensorManager.getDefaultSensor(Sensor.TYPE_ACCELEROMETER);
         if (accelerometer != null) {
             mSensorManager.registerListener(this, accelerometer,
-                    SensorManager.SENSOR_DELAY_NORMAL, SensorManager.SENSOR_DELAY_UI);
+                    SensorManager.SENSOR_DELAY_FASTEST, SensorManager.SENSOR_DELAY_UI);
         }
         Sensor gyroscope = mSensorManager.getDefaultSensor(Sensor.TYPE_GYROSCOPE);
         if (gyroscope != null) {
             mSensorManager.registerListener(this, gyroscope,
-                    SensorManager.SENSOR_DELAY_NORMAL, SensorManager.SENSOR_DELAY_UI);
+                    SensorManager.SENSOR_DELAY_FASTEST, SensorManager.SENSOR_DELAY_UI);
         }
         Sensor magneticField = mSensorManager.getDefaultSensor(Sensor.TYPE_MAGNETIC_FIELD);
         if (magneticField != null) {
             mSensorManager.registerListener(this, magneticField,
-                    SensorManager.SENSOR_DELAY_NORMAL, SensorManager.SENSOR_DELAY_UI);
+                    SensorManager.SENSOR_DELAY_FASTEST, SensorManager.SENSOR_DELAY_UI);
         }
     }
 
@@ -269,7 +269,7 @@ public class SensorActivity extends AppCompatActivity implements SensorEventList
                         aReading[0], aReading[1], aReading[2],
                         gReading[0], gReading[1], gReading[2],
                         mReading[0], mReading[1], mReading[2],
-                        ahrsReading[0], ahrsReading[1], ahrsReading[2]));
+                        ahrsReading[1], ahrsReading[2], ahrsReading[0]));
 
                 // Write into log
 
