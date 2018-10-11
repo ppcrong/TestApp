@@ -12,6 +12,7 @@ import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.ppcrong.loglib.LogLib;
 import com.ppcrong.rxpermlib.RxPermLib;
@@ -45,6 +46,8 @@ public class SensorActivity extends AppCompatActivity implements SensorEventList
 
     private boolean mIsNowLogging = false;
     private LogLib logSensor = new LogLib();
+
+    private int mShowRawDataCount = 0;
     // endregion [Variable]
 
     // region [Widget]
@@ -309,6 +312,20 @@ public class SensorActivity extends AppCompatActivity implements SensorEventList
                 // Write into log
                 logSensor.writeLog(getSensorDataString(aReading, gReading, mReading, ahrsReading));
 
+                // Show toast for sensor raw data
+                mShowRawDataCount++;
+                if (mShowRawDataCount > 500) {
+
+                    // Show toast
+                    showToast(String.format(Locale.getDefault(),
+                            "Acc: %.3f, %.3f, %.3f\nAHRS: %.3f, %.3f, %.3f",
+                            aReading[0], aReading[1], aReading[2],
+                            ahrsReading[1], ahrsReading[2], ahrsReading[0]));
+
+                    // Reset flag
+                    mShowRawDataCount = 0;
+                }
+
                 // Inform subscriber
                 emitter.onNext(0);
 
@@ -403,6 +420,24 @@ public class SensorActivity extends AppCompatActivity implements SensorEventList
         mCbM.setEnabled(b);
         mCbAhrs.setEnabled(b);
         mEditHz.setEnabled(b);
+    }
+
+    /**
+     * Shows a message as a Toast notification. This method is thread safe, you can call it from any thread
+     *
+     * @param message a message to be shown
+     */
+    protected void showToast(final String message) {
+        runOnUiThread(() -> Toast.makeText(SensorActivity.this, message, Toast.LENGTH_LONG).show());
+    }
+
+    /**
+     * Shows a message as a Toast notification. This method is thread safe, you can call it from any thread
+     *
+     * @param messageResId an resource id of the message to be shown
+     */
+    protected void showToast(final int messageResId) {
+        runOnUiThread(() -> Toast.makeText(SensorActivity.this, messageResId, Toast.LENGTH_SHORT).show());
     }
     // endregion [Private Function]
 }
