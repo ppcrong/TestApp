@@ -318,8 +318,10 @@ public class SensorActivity extends AppCompatActivity implements SensorEventList
 
                     // Show toast
                     showToast(String.format(Locale.getDefault(),
-                            "Acc: %.3f, %.3f, %.3f\nAHRS: %.3f, %.3f, %.3f",
+                            "A: %.3f, %.3f, %.3f\nG: %.3f, %.3f, %.3f\nM: %.3f, %.3f, %.3f\nAHRS: %.3f, %.3f, %.3f",
                             aReading[0], aReading[1], aReading[2],
+                            gReading[0], gReading[1], gReading[2],
+                            mReading[0], mReading[1], mReading[2],
                             ahrsReading[1], ahrsReading[2], ahrsReading[0]));
 
                     // Reset flag
