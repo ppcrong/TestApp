@@ -65,6 +65,8 @@ public class SensorActivity extends AppCompatActivity implements SensorEventList
     CheckBox mCbM;
     @BindView(R.id.cb_ahrs)
     CheckBox mCbAhrs;
+    @BindView(R.id.cb_r)
+    CheckBox mCbR;
     @BindView(R.id.edit_hz)
     EditText mEditHz;
     // endregion [Widget]
@@ -240,7 +242,8 @@ public class SensorActivity extends AppCompatActivity implements SensorEventList
         mBtnStartLog.setText("STOP log");
         setConfigEnable(false);
         KLog.i("A: " + mCbA.isChecked() + ", G: " + mCbG.isChecked() +
-                ", M: " + mCbA.isChecked() + ", AHRS: " + mCbAhrs.isChecked());
+                ", M: " + mCbA.isChecked() + ", AHRS: " + mCbAhrs.isChecked() +
+                ", R: " + mCbR.isChecked());
 
         // Log file
         SimpleDateFormat logFormat = new SimpleDateFormat("yyyyMMddHHmmss", Locale.US);
@@ -301,16 +304,24 @@ public class SensorActivity extends AppCompatActivity implements SensorEventList
                 ahrsReading[1] = (float) Math.toDegrees(mOrientationAngles[1]);
                 ahrsReading[2] = (float) Math.toDegrees(mOrientationAngles[2]);
 
+                // RotationMatrix R
+                float[] rotationMatrix = new float[9];
+                System.arraycopy(mRotationMatrix, 0, rotationMatrix,
+                        0, rotationMatrix.length);
+
                 KLog.i(String.format(Locale.getDefault(),
-                        "[LOG] %d,%.3f,%.3f,%.3f,%.3f,%.3f,%.3f,%.3f,%.3f,%.3f,%.3f,%.3f,%.3f",
+                        "[LOG] %d,%.3f,%.3f,%.3f,%.3f,%.3f,%.3f,%.3f,%.3f,%.3f,%.3f,%.3f,%.3f,%.3f,%.3f,%.3f,%.3f,%.3f,%.3f,%.3f,%.3f,%.3f",
                         System.currentTimeMillis(),
                         aReading[0], aReading[1], aReading[2],
                         gReading[0], gReading[1], gReading[2],
                         mReading[0], mReading[1], mReading[2],
-                        ahrsReading[1], ahrsReading[2], ahrsReading[0]));
+                        ahrsReading[1], ahrsReading[2], ahrsReading[0],
+                        rotationMatrix[0], rotationMatrix[1], rotationMatrix[2], rotationMatrix[3],
+                        rotationMatrix[4], rotationMatrix[5], rotationMatrix[6], rotationMatrix[7],
+                        rotationMatrix[8]));
 
                 // Write into log
-                logSensor.writeLog(getSensorDataString(aReading, gReading, mReading, ahrsReading));
+                logSensor.writeLog(getSensorDataString(aReading, gReading, mReading, ahrsReading, rotationMatrix));
 
                 // Show toast for sensor raw data
                 mShowRawDataCount++;
@@ -339,7 +350,8 @@ public class SensorActivity extends AppCompatActivity implements SensorEventList
         }).subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread());
     }
 
-    private String getSensorDataString(float[] aReading, float[] gReading, float[] mReading, float[] ahrsReading) {
+    private String getSensorDataString(float[] aReading, float[] gReading, float[] mReading,
+                                       float[] ahrsReading, float[] rotationMatrix) {
 
         StringBuilder stringBuilder = new StringBuilder(Long.toString(System.currentTimeMillis()));
         stringBuilder.append(",");
@@ -361,7 +373,15 @@ public class SensorActivity extends AppCompatActivity implements SensorEventList
 
         if (mCbAhrs.isChecked()) {
             stringBuilder.append(String.format(Locale.getDefault(),
-                    "%.3f,%.3f,%.3f", ahrsReading[1], ahrsReading[2], ahrsReading[0]));
+                    "%.3f,%.3f,%.3f,", ahrsReading[1], ahrsReading[2], ahrsReading[0]));
+        }
+
+        if (mCbR.isChecked()) {
+            stringBuilder.append(String.format(Locale.getDefault(),
+                    "%.3f,%.3f,%.3f,%.3f,%.3f,%.3f,%.3f,%.3f,%.3f",
+                    rotationMatrix[0], rotationMatrix[1], rotationMatrix[2],
+                    rotationMatrix[3], rotationMatrix[4], rotationMatrix[5],
+                    rotationMatrix[6], rotationMatrix[7], rotationMatrix[8]));
         }
 
         stringBuilder.append("\n");
@@ -386,7 +406,11 @@ public class SensorActivity extends AppCompatActivity implements SensorEventList
         }
 
         if (mCbAhrs.isChecked()) {
-            stringBuilder.append("AHRS");
+            stringBuilder.append("AHRS,");
+        }
+
+        if (mCbR.isChecked()) {
+            stringBuilder.append("R");
         }
 
         stringBuilder.append("\n");
@@ -421,6 +445,7 @@ public class SensorActivity extends AppCompatActivity implements SensorEventList
         mCbG.setEnabled(b);
         mCbM.setEnabled(b);
         mCbAhrs.setEnabled(b);
+        mCbR.setEnabled(b);
         mEditHz.setEnabled(b);
     }
 
