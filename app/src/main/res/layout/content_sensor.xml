@@ -37,6 +37,15 @@
                 android:text="START log"
                 android:textAllCaps="false"/>
 
+            <Button
+                android:id="@+id/btn_write_tag"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="#8fb8fa"
+                android:enabled="false"
+                android:text="WRITE tag !!!!!!!!!!"
+                android:textAllCaps="false"/>
+
             <TextView
                 android:id="@+id/tv_log_path"
                 android:layout_width="match_parent"

@@ -53,6 +53,8 @@ public class SensorActivity extends AppCompatActivity implements SensorEventList
     // region [Widget]
     @BindView(R.id.btn_list_sensors)
     Button mBtnListSensors;
+    @BindView(R.id.btn_write_tag)
+    Button mBtnWriteTag;
     @BindView(R.id.btn_start_log)
     Button mBtnStartLog;
     @BindView(R.id.tv_log_path)
@@ -102,6 +104,18 @@ public class SensorActivity extends AppCompatActivity implements SensorEventList
         } else {
 
             startLog();
+        }
+    }
+
+    @OnClick(R.id.btn_write_tag)
+    public void onClickBtnWriteTag() {
+
+        if (isNowLogging()) {
+
+            logSensor.writeLog("!!!!!!!!!!\n");
+            showToast("!!!!!!!!!! tag in log");
+        } else {
+
         }
     }
     // endregion [OnClick]
@@ -447,6 +461,7 @@ public class SensorActivity extends AppCompatActivity implements SensorEventList
         mCbAhrs.setEnabled(b);
         mCbR.setEnabled(b);
         mEditHz.setEnabled(b);
+        mBtnWriteTag.setEnabled(!b);
     }
 
     /**
