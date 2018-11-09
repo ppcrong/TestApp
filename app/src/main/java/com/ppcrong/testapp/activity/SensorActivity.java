@@ -45,7 +45,7 @@ public class SensorActivity extends AppCompatActivity implements SensorEventList
     private final float[] mOrientationAngles = new float[3];
 
     private boolean mIsNowLogging = false;
-    private LogLib logSensor = new LogLib();
+    private LogLib mLogSensor = new LogLib();
 
     private int mShowRawDataCount = 0;
     // endregion [Variable]
@@ -112,7 +112,7 @@ public class SensorActivity extends AppCompatActivity implements SensorEventList
 
         if (isNowLogging()) {
 
-            logSensor.writeLog("!!!!!!!!!!\n");
+            mLogSensor.writeLog("!!!!!!!!!!\n");
             showToast("!!!!!!!!!! tag in log");
         } else {
 
@@ -261,17 +261,20 @@ public class SensorActivity extends AppCompatActivity implements SensorEventList
 
         // Log file
         SimpleDateFormat logFormat = new SimpleDateFormat("yyyyMMddHHmmss", Locale.US);
-        logSensor.openLogFile(logSensor.getExDir("Cloudchip/PhoneSensorData"),
+        mLogSensor.openLogFile(mLogSensor.getExDir("Cloudchip/PhoneSensorData"),
                 logFormat.format(new Date()) + "_SENSOR_" + mEditHz.getText().toString() + ".LOG");
-        logSensor.writeLog(getFirstLineString());
+        mLogSensor.writeLog(getFirstLineString());
 
         // Start logging
         logAllSensorData().subscribe(this::onLogNext, this::onLogException, this::onLogComplete);
     }
 
-    private void onLogNext(Integer integer) {
+    private void onLogNext(String log) {
 
-        KLog.i();
+        KLog.i(log);
+
+        // Write into log
+        mLogSensor.writeLog(log);
     }
 
     private void onLogException(Throwable throwable) {
@@ -284,9 +287,9 @@ public class SensorActivity extends AppCompatActivity implements SensorEventList
         KLog.i("Log complete");
     }
 
-    private Observable<Integer> logAllSensorData() {
+    private Observable<String> logAllSensorData() {
 
-        return Observable.create((ObservableOnSubscribe<Integer>) emitter -> {
+        return Observable.create((ObservableOnSubscribe<String>) emitter -> {
 
             long delay = mEditHz.getText().toString().isEmpty() ?
                     100l : (1000l / Long.valueOf(mEditHz.getText().toString()));
@@ -323,19 +326,8 @@ public class SensorActivity extends AppCompatActivity implements SensorEventList
                 System.arraycopy(mRotationMatrix, 0, rotationMatrix,
                         0, rotationMatrix.length);
 
-                KLog.i(String.format(Locale.getDefault(),
-                        "[LOG] %d,%.3f,%.3f,%.3f,%.3f,%.3f,%.3f,%.3f,%.3f,%.3f,%.3f,%.3f,%.3f,%.3f,%.3f,%.3f,%.3f,%.3f,%.3f,%.3f,%.3f,%.3f",
-                        System.currentTimeMillis(),
-                        aReading[0], aReading[1], aReading[2],
-                        gReading[0], gReading[1], gReading[2],
-                        mReading[0], mReading[1], mReading[2],
-                        ahrsReading[1], ahrsReading[2], ahrsReading[0],
-                        rotationMatrix[0], rotationMatrix[1], rotationMatrix[2], rotationMatrix[3],
-                        rotationMatrix[4], rotationMatrix[5], rotationMatrix[6], rotationMatrix[7],
-                        rotationMatrix[8]));
-
-                // Write into log
-                logSensor.writeLog(getSensorDataString(aReading, gReading, mReading, ahrsReading, rotationMatrix));
+                // Inform subscriber to write log
+                emitter.onNext(getSensorDataString(aReading, gReading, mReading, ahrsReading, rotationMatrix));
 
                 // Show toast for sensor raw data
                 mShowRawDataCount++;
@@ -353,14 +345,13 @@ public class SensorActivity extends AppCompatActivity implements SensorEventList
                     mShowRawDataCount = 0;
                 }
 
-                // Inform subscriber
-                emitter.onNext(0);
-
                 // Delay
                 Thread.sleep(delay);
+
             } while (isNowLogging());
 
             emitter.onComplete();
+
         }).subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread());
     }
 
@@ -440,7 +431,7 @@ public class SensorActivity extends AppCompatActivity implements SensorEventList
         setConfigEnable(true);
 
         // Log
-        String logPath = logSensor.closeLogFileReturnPath();
+        String logPath = mLogSensor.closeLogFileReturnPath();
         if (!logPath.isEmpty()) {
             File file = new File(logPath);
             logPath += String.format(Locale.US, " (%.2f KB)", (file.length() / 1024f));
