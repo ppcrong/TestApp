@@ -75,4 +75,5 @@ public class TimezoneActivity extends AppCompatActivity {
         Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
     }
+    // endregion [Private Function]
 }
