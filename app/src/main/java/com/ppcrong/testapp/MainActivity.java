@@ -10,6 +10,7 @@ import com.ppcrong.testapp.activity.LogLibActivity;
 import com.ppcrong.testapp.activity.RxJava2Activity;
 import com.ppcrong.testapp.activity.SensorActivity;
 import com.ppcrong.testapp.activity.TimezoneActivity;
+import com.ppcrong.testapp.activity.setting.SettingsActivity;
 import com.ppcrong.utils.MiscUtils;
 import com.socks.library.KLog;
 
@@ -50,6 +51,14 @@ public class MainActivity extends AppCompatActivity {
         KLog.i();
 
         showRxJava2Activity();
+    }
+
+    @OnClick(R.id.btn_settings)
+    public void onClickBtnSettings() {
+
+        KLog.i();
+
+        showSettingsActivity();
     }
     // region [OnClick]
 
@@ -97,6 +106,13 @@ public class MainActivity extends AppCompatActivity {
 
         Intent pageIntent = new Intent();
         pageIntent.setClass(this, RxJava2Activity.class);
+        MiscUtils.startSafeIntent(this, pageIntent);
+    }
+
+    private void showSettingsActivity() {
+
+        Intent pageIntent = new Intent();
+        pageIntent.setClass(this, SettingsActivity.class);
         MiscUtils.startSafeIntent(this, pageIntent);
     }
     // endregion [Private Function]
