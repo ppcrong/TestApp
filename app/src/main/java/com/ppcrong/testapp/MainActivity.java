@@ -2,9 +2,8 @@ package com.ppcrong.testapp;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.Toolbar;
-import android.widget.Button;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.Toolbar;
 
 import com.ppcrong.testapp.activity.LogLibActivity;
 import com.ppcrong.testapp.activity.RxJava2Activity;
@@ -14,7 +13,6 @@ import com.ppcrong.testapp.activity.setting.SettingsActivity;
 import com.ppcrong.utils.MiscUtils;
 import com.socks.library.KLog;
 
-import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 
