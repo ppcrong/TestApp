@@ -324,7 +324,7 @@ public class SensorActivity extends AppCompatActivity implements SensorEventList
                 ahrsReading[1] = (float) Math.toDegrees(mOrientationAngles[1]);
                 ahrsReading[2] = (float) Math.toDegrees(mOrientationAngles[2]);
 
-                // Calculate Magnetic field strength
+                // Calculate magnitude of geomagnetic field
                 float intensityAndroid = (mIMatrix[3] * mRotationMatrix[0] + mIMatrix[4] * mRotationMatrix[3] + mIMatrix[5] * mRotationMatrix[6]) * mMagnetometerReading[0] +
                         (mIMatrix[3] * mRotationMatrix[1] + mIMatrix[4] * mRotationMatrix[4] + mIMatrix[5] * mRotationMatrix[7]) * mMagnetometerReading[1] +
                         (mIMatrix[3] * mRotationMatrix[2] + mIMatrix[4] * mRotationMatrix[5] + mIMatrix[5] * mRotationMatrix[8]) * mMagnetometerReading[2];

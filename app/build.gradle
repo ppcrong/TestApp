@@ -11,8 +11,8 @@ android {
         applicationId "com.ppcrong.testapp"
         minSdkVersion 21
         targetSdkVersion 28
-        versionCode 1805081500
-        versionName "1.0.1805081500"
+        versionCode 1908151400
+        versionName "1.0.1908151400"
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
     }
     signingConfigs {
