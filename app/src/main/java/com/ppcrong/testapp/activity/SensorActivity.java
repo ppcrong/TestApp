@@ -6,8 +6,10 @@ import android.hardware.SensorEvent;
 import android.hardware.SensorEventListener;
 import android.hardware.SensorManager;
 import android.os.Bundle;
+
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
+
 import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.EditText;
@@ -42,6 +44,7 @@ public class SensorActivity extends AppCompatActivity implements SensorEventList
     private final float[] mMagnetometerReading = new float[3];
 
     private final float[] mRotationMatrix = new float[9];
+    private final float[] mIMatrix = new float[9];
     private final float[] mOrientationAngles = new float[3];
 
     private boolean mIsNowLogging = false;
@@ -206,7 +209,7 @@ public class SensorActivity extends AppCompatActivity implements SensorEventList
     public void updateOrientationAngles() {
 
         // Update rotation matrix, which is needed to update orientation angles.
-        SensorManager.getRotationMatrix(mRotationMatrix, null,
+        SensorManager.getRotationMatrix(mRotationMatrix, mIMatrix,
                 mAccelerometerReading, mMagnetometerReading);
 
         // "mRotationMatrix" now has up-to-date information.
@@ -219,7 +222,7 @@ public class SensorActivity extends AppCompatActivity implements SensorEventList
     public void updateOrientationAngles(float[] aReading, float[] mReading) {
 
         // Update rotation matrix, which is needed to update orientation angles.
-        SensorManager.getRotationMatrix(mRotationMatrix, null,
+        SensorManager.getRotationMatrix(mRotationMatrix, mIMatrix,
                 aReading, mReading);
 
         // "mRotationMatrix" now has up-to-date information.
@@ -321,13 +324,22 @@ public class SensorActivity extends AppCompatActivity implements SensorEventList
                 ahrsReading[1] = (float) Math.toDegrees(mOrientationAngles[1]);
                 ahrsReading[2] = (float) Math.toDegrees(mOrientationAngles[2]);
 
+                // Calculate Magnetic field strength
+                float intensityAndroid = (mIMatrix[3] * mRotationMatrix[0] + mIMatrix[4] * mRotationMatrix[3] + mIMatrix[5] * mRotationMatrix[6]) * mMagnetometerReading[0] +
+                        (mIMatrix[3] * mRotationMatrix[1] + mIMatrix[4] * mRotationMatrix[4] + mIMatrix[5] * mRotationMatrix[7]) * mMagnetometerReading[1] +
+                        (mIMatrix[3] * mRotationMatrix[2] + mIMatrix[4] * mRotationMatrix[5] + mIMatrix[5] * mRotationMatrix[8]) * mMagnetometerReading[2];
+                float intensityAlg = (float) Math.sqrt(Math.pow((double) mMagnetometerReading[0], 2) +
+                        Math.pow((double) mMagnetometerReading[1], 2) +
+                        Math.pow((double) mMagnetometerReading[2], 2));
+
                 // RotationMatrix R
                 float[] rotationMatrix = new float[9];
                 System.arraycopy(mRotationMatrix, 0, rotationMatrix,
                         0, rotationMatrix.length);
 
                 // Inform subscriber to write log
-                emitter.onNext(getSensorDataString(aReading, gReading, mReading, ahrsReading, rotationMatrix));
+                emitter.onNext(getSensorDataString(aReading, gReading, mReading, ahrsReading, rotationMatrix,
+                        intensityAndroid, intensityAlg));
 
                 // Show toast for sensor raw data
                 mShowRawDataCount++;
@@ -335,10 +347,11 @@ public class SensorActivity extends AppCompatActivity implements SensorEventList
 
                     // Show toast
                     showToast(String.format(Locale.getDefault(),
-                            "A: %.3f, %.3f, %.3f\nG: %.3f, %.3f, %.3f\nM: %.3f, %.3f, %.3f\nAHRS: %.3f, %.3f, %.3f",
+                            "A: %.3f, %.3f, %.3f\nG: %.3f, %.3f, %.3f\nM: %.3f, %.3f, %.3f\nI: %.3f, %.3f\nAHRS: %.3f, %.3f, %.3f",
                             aReading[0], aReading[1], aReading[2],
                             gReading[0], gReading[1], gReading[2],
                             mReading[0], mReading[1], mReading[2],
+                            intensityAndroid, intensityAlg,
                             ahrsReading[1], ahrsReading[2], ahrsReading[0]));
 
                     // Reset flag
@@ -356,7 +369,8 @@ public class SensorActivity extends AppCompatActivity implements SensorEventList
     }
 
     private String getSensorDataString(float[] aReading, float[] gReading, float[] mReading,
-                                       float[] ahrsReading, float[] rotationMatrix) {
+                                       float[] ahrsReading, float[] rotationMatrix,
+                                       float intensityAndroid, float intensityAlg) {
 
         StringBuilder stringBuilder = new StringBuilder(Long.toString(System.currentTimeMillis()));
         stringBuilder.append(",");
@@ -373,7 +387,8 @@ public class SensorActivity extends AppCompatActivity implements SensorEventList
 
         if (mCbM.isChecked()) {
             stringBuilder.append(String.format(Locale.getDefault(),
-                    "%.3f,%.3f,%.3f,", mReading[0], mReading[1], mReading[2]));
+                    "%.3f,%.3f,%.3f,%.3f,%.3f,", mReading[0], mReading[1], mReading[2],
+                    intensityAndroid, intensityAlg));
         }
 
         if (mCbAhrs.isChecked()) {
