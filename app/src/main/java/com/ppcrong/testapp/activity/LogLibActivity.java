@@ -1,6 +1,7 @@
 package com.ppcrong.testapp.activity;
 
 import android.Manifest;
+import android.os.Build;
 import android.os.Bundle;
 import android.os.Environment;
 import androidx.appcompat.app.AppCompatActivity;
@@ -124,6 +125,52 @@ public class LogLibActivity extends AppCompatActivity {
 
         KLog.i();
 
+        /* getRootDirectory */
+        // Get directory path
+        String dirPath = Environment.getRootDirectory().getPath();
+        String dirAbsPath = Environment.getRootDirectory().getAbsolutePath();
+        String dirCcPath = "";
+        try {
+            dirCcPath = Environment.getRootDirectory().getCanonicalPath();
+        } catch (IOException e) {
+            KLog.e(Log.getStackTraceString(e));
+        }
+        KLog.i(TestApp.LOG_TAG, "getRootDirectory", dirPath, dirAbsPath, dirCcPath);
+
+        /* getDataDirectory */
+        // Get directory path
+        dirPath = Environment.getDataDirectory().getPath();
+        dirAbsPath = Environment.getDataDirectory().getAbsolutePath();
+        dirCcPath = "";
+        try {
+            dirCcPath = Environment.getDataDirectory().getCanonicalPath();
+        } catch (IOException e) {
+            KLog.e(Log.getStackTraceString(e));
+        }
+        KLog.i(TestApp.LOG_TAG, "getDataDirectory", dirPath, dirAbsPath, dirCcPath);
+
+        /* getDownloadCacheDirectory */
+        // Get directory path
+        dirPath = Environment.getDownloadCacheDirectory().getPath();
+        dirAbsPath = Environment.getDownloadCacheDirectory().getAbsolutePath();
+        dirCcPath = "";
+        try {
+            dirCcPath = Environment.getDownloadCacheDirectory().getCanonicalPath();
+        } catch (IOException e) {
+            KLog.e(Log.getStackTraceString(e));
+        }
+        KLog.i(TestApp.LOG_TAG, "getDownloadCacheDirectory", dirPath, dirAbsPath, dirCcPath);
+
+        /**
+         * Many APIs are deprecated since Android Q
+         */
+        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.Q) {
+            deprecatedEnvDirS();
+        }
+    }
+
+    @Deprecated
+    public void deprecatedEnvDirS() {
         /* getExternalStorageDirectory */
         // Get directory path
         String dirPath = Environment.getExternalStorageDirectory().getPath();
@@ -147,26 +194,46 @@ public class LogLibActivity extends AppCompatActivity {
             KLog.e(Log.getStackTraceString(e));
         }
         KLog.i(TestApp.LOG_TAG, "getExternalStoragePublicDirectory", dirPath, dirAbsPath, dirCcPath);
-
     }
 
     @OnClick(R.id.btn_save_file_s)
     public void onClickBtnSaveFileS() {
 
-        sLogLib.saveFile(sLogLib.getExDir("LogLib"), "TestSaveFile.txt", "Hello world sssss");
-        sLogLib.readFile(sLogLib.getExDir("LogLib"), "TestSaveFile.txt");
+        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.Q) {
+            deprecatedSaveFileS();
+        } else {
+            sLogLib.saveFile(sLogLib.getExDir(this, "LogLib"), "TestSaveFile.txt", "Hello world sssss");
+            sLogLib.readFile(sLogLib.getExDir(this, "LogLib"), "TestSaveFile.txt");
+        }
         KLog.i("filename: " + sLogLib.genFileName("Test_s", "postfix", "log"));
         KLog.i("filenameMs: " + sLogLib.genFileNameWithMs("Test_s", "postfix", "log"));
+    }
+
+    @Deprecated
+    private void deprecatedSaveFileS() {
+        sLogLib.saveFile(sLogLib.getExDir("LogLib"), "TestSaveFile.txt", "Hello world sssss");
+        sLogLib.readFile(sLogLib.getExDir("LogLib"), "TestSaveFile.txt");
     }
 
     @OnClick(R.id.btn_open_log_file_s)
     public void onClickBtnOpenLogFileS() {
 
-        boolean b = sLogLib.openLogFile(sLogLib.getExDir("LogLib"), "TestLogFile.txt");
+        boolean b;
+        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.Q) {
+            b = deprecatedOpenLogFileS();
+        } else {
+            b = sLogLib.openLogFile(sLogLib.getExDir(this, "LogLib"), "TestLogFile.txt");
+        }
+
         KLog.i(TestApp.LOG_TAG, "openLogFile " + (b ? "ok" : "fail"));
         mBtnWritingData_s.setEnabled(b);
         mBtnStopToSave_s.setEnabled(b);
         mBtnReadLog_s.setEnabled(!b);
+    }
+
+    @Deprecated
+    private boolean deprecatedOpenLogFileS() {
+        return sLogLib.openLogFile(sLogLib.getExDir("LogLib"), "TestLogFile.txt");
     }
 
     int nLog = 0;
@@ -191,6 +258,15 @@ public class LogLibActivity extends AppCompatActivity {
     @OnClick(R.id.btn_read_log_s)
     public void onClickReadLogS() {
 
+        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.Q) {
+            deprecatedReadLogS();
+        } else {
+            sLogLib.readFile(sLogLib.getExDir(this, "LogLib"), "TestLogFile.txt");
+        }
+    }
+
+    @Deprecated
+    private void deprecatedReadLogS() {
         sLogLib.readFile(sLogLib.getExDir("LogLib"), "TestLogFile.txt");
     }
 
@@ -200,20 +276,40 @@ public class LogLibActivity extends AppCompatActivity {
     @OnClick(R.id.btn_save_file)
     public void onClickBtnSaveFile() {
 
-        logger1.saveFile(sLogLib.getExDir("LogLib"), "TestSaveFile1.txt", "Hello world 11111");
-        logger1.readFile(sLogLib.getExDir("LogLib"), "TestSaveFile1.txt");
+        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.Q) {
+            deprecatedSaveFile();
+        } else {
+            logger1.saveFile(sLogLib.getExDir(this, "LogLib"), "TestSaveFile1.txt", "Hello world 11111");
+            logger1.readFile(sLogLib.getExDir(this, "LogLib"), "TestSaveFile1.txt");
+        }
         KLog.i("filename: " + logger1.genFileName("Test1", "postfix", "log"));
         KLog.i("filenameMs: " + logger1.genFileNameWithMs("Test1", "postfix", "log"));
+    }
+
+    @Deprecated
+    private void deprecatedSaveFile() {
+        logger1.saveFile(sLogLib.getExDir("LogLib"), "TestSaveFile.txt", "Hello world sssss");
+        logger1.readFile(sLogLib.getExDir("LogLib"), "TestSaveFile.txt");
     }
 
     @OnClick(R.id.btn_open_log_file)
     public void onClickBtnOpenLogFile() {
 
-        boolean b = logger1.openLogFile(sLogLib.getExDir("LogLib"), "TestLogFile1.txt");
+        boolean b;
+        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.Q) {
+            b = deprecatedOpenLogFile();
+        } else {
+            b = logger1.openLogFile(sLogLib.getExDir(this, "LogLib"), "TestLogFile1.txt");
+        }
         KLog.i(TestApp.LOG_TAG, "openLogFile " + (b ? "ok" : "fail"));
         mBtnWritingData.setEnabled(b);
         mBtnStopToSave.setEnabled(b);
         mBtnReadLog.setEnabled(!b);
+    }
+
+    @Deprecated
+    private boolean deprecatedOpenLogFile() {
+        return logger1.openLogFile(sLogLib.getExDir("LogLib"), "TestLogFile.txt");
     }
 
     @OnClick(R.id.btn_write_log)
@@ -236,26 +332,56 @@ public class LogLibActivity extends AppCompatActivity {
     @OnClick(R.id.btn_read_log)
     public void onClickReadLog() {
 
-        logger2.readFile(sLogLib.getExDir("LogLib"), "TestLogFile1.txt");
+        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.Q) {
+            deprecatedReadLog();
+        } else {
+            logger2.readFile(sLogLib.getExDir(this, "LogLib"), "TestLogFile1.txt");
+        }
+    }
+
+    @Deprecated
+    private void deprecatedReadLog() {
+        logger2.readFile(sLogLib.getExDir("LogLib"), "TestLogFile.txt");
     }
 
     @OnClick(R.id.btn_save_file2)
     public void onClickBtnSaveFile2() {
 
+        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.Q) {
+            deprecatedSaveFile2();
+        } else {
+            logger2.saveFile(sLogLib.getExDir(this, "LogLib"), "TestSaveFile2.txt", "Hello world 22222");
+            logger2.readFile(sLogLib.getExDir(this, "LogLib"), "TestSaveFile2.txt");
+        }
+
+        KLog.i("filename2: " + logger2.genFileName("Test2", "postfix2", "log"));
+        KLog.i("filenameMs2: " + logger2.genFileNameWithMs("Test2", "postfix2", "log"));
+    }
+
+    @Deprecated
+    private void deprecatedSaveFile2() {
         logger2.saveFile(sLogLib.getExDir("LogLib"), "TestSaveFile2.txt", "Hello world 22222");
         logger2.readFile(sLogLib.getExDir("LogLib"), "TestSaveFile2.txt");
-        String filename = logger2.genFileName("Test2", "postfix2", "log");
-        String filenameMs = logger2.genFileNameWithMs("Test2", "postfix2", "log");
     }
 
     @OnClick(R.id.btn_open_log_file2)
     public void onClickBtnOpenLogFile2() {
 
-        boolean b = logger2.openLogFile(sLogLib.getExDir("LogLib"), "TestLogFile2.txt");
+        boolean b;
+        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.Q) {
+            b = deprecatedOpenLogFile2();
+        } else {
+            b = logger2.openLogFile(sLogLib.getExDir(this, "LogLib"), "TestLogFile2.txt");
+        }
         KLog.i(TestApp.LOG_TAG, "openLogFile " + (b ? "ok" : "fail"));
         mBtnWritingData2.setEnabled(b);
         mBtnStopToSave2.setEnabled(b);
         mBtnReadLog2.setEnabled(!b);
+    }
+
+    @Deprecated
+    private boolean deprecatedOpenLogFile2() {
+        return logger2.openLogFile(sLogLib.getExDir("LogLib"), "TestLogFile2.txt");
     }
 
     @OnClick(R.id.btn_write_log2)
@@ -278,6 +404,15 @@ public class LogLibActivity extends AppCompatActivity {
     @OnClick(R.id.btn_read_log2)
     public void onClickReadLog2() {
 
+        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.Q) {
+            deprecatedReadLog2();
+        } else {
+            logger2.readFile(sLogLib.getExDir(this, "LogLib"), "TestLogFile2.txt");
+        }
+    }
+
+    @Deprecated
+    private void deprecatedReadLog2() {
         logger2.readFile(sLogLib.getExDir("LogLib"), "TestLogFile2.txt");
     }
     // endregion [OnClick]

@@ -5,16 +5,16 @@ import android.hardware.Sensor;
 import android.hardware.SensorEvent;
 import android.hardware.SensorEventListener;
 import android.hardware.SensorManager;
+import android.os.Build;
 import android.os.Bundle;
-
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.appcompat.widget.Toolbar;
-
 import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
+
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.Toolbar;
 
 import com.ppcrong.loglib.LogLib;
 import com.ppcrong.rxpermlib.RxPermLib;
@@ -264,12 +264,24 @@ public class SensorActivity extends AppCompatActivity implements SensorEventList
 
         // Log file
         SimpleDateFormat logFormat = new SimpleDateFormat("yyyyMMddHHmmss", Locale.US);
-        mLogSensor.openLogFile(mLogSensor.getExDir("Cloudchip/PhoneSensorData"),
-                logFormat.format(new Date()) + "_SENSOR_" + mEditHz.getText().toString() + ".LOG");
+
+        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.Q) {
+            deprecatedOpenLogFile(logFormat);
+        } else {
+            mLogSensor.openLogFile(mLogSensor.getExDir(this, "Cloudchip/PhoneSensorData"),
+                    logFormat.format(new Date()) + "_SENSOR_" + mEditHz.getText().toString() + ".LOG");
+        }
+
         mLogSensor.writeLog(getFirstLineString());
 
         // Start logging
         logAllSensorData().subscribe(this::onLogNext, this::onLogException, this::onLogComplete);
+    }
+
+    @Deprecated
+    private void deprecatedOpenLogFile(SimpleDateFormat logFormat) {
+        mLogSensor.openLogFile(mLogSensor.getExDir("Cloudchip/PhoneSensorData"),
+                logFormat.format(new Date()) + "_SENSOR_" + mEditHz.getText().toString() + ".LOG");
     }
 
     private void onLogNext(String log) {
