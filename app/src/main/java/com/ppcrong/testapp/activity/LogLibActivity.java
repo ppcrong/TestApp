@@ -1,11 +1,21 @@
 package com.ppcrong.testapp.activity;
 
 import android.Manifest;
+import android.annotation.TargetApi;
+import android.content.ContentResolver;
+import android.content.ContentValues;
+import android.content.Context;
+import android.graphics.Bitmap;
+import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Environment;
+
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
+
+import android.provider.MediaStore;
 import android.util.Log;
 import android.widget.Button;
 
@@ -18,6 +28,7 @@ import com.socks.library.KLog;
 
 import java.io.File;
 import java.io.IOException;
+import java.io.OutputStream;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -270,6 +281,24 @@ public class LogLibActivity extends AppCompatActivity {
         sLogLib.readFile(sLogLib.getExDir("LogLib"), "TestLogFile.txt");
     }
 
+    @OnClick(R.id.btn_get_file_uri)
+    public void onClickGetFileUri() {
+
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
+            try {
+//                Uri uri = getFileUri(this, "image/png", "test.png");
+                Uri uri = getFileUri(this, "text/plain", "test.txt");
+                if (uri != null) {
+                    KLog.i(uri.getPath());
+                } else {
+                    KLog.i("uri is null");
+                }
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
+    }
+
     LogLib logger1 = new LogLib();
     LogLib logger2 = new LogLib();
 
@@ -439,6 +468,53 @@ public class LogLibActivity extends AppCompatActivity {
 
             KLog.i("WRITE_EXTERNAL_STORAGE granted");
         }, Manifest.permission.WRITE_EXTERNAL_STORAGE);
+    }
+
+    // REFERENCE: https://stackoverflow.com/questions/56904485/how-to-save-an-image-in-android-q-using-mediastore
+    @TargetApi(Build.VERSION_CODES.Q)
+    private Uri getFileUri(@NonNull final Context context, @NonNull final String mimeType,
+                            @NonNull final String displayName) throws IOException
+    {
+        final String relativeLocation = Environment.DIRECTORY_DOWNLOADS + File.separator + "test";
+
+        final ContentValues  contentValues = new ContentValues();
+        contentValues.put(MediaStore.MediaColumns.DISPLAY_NAME, displayName);
+        contentValues.put(MediaStore.MediaColumns.MIME_TYPE, mimeType);
+        contentValues.put(MediaStore.MediaColumns.RELATIVE_PATH, relativeLocation);
+
+        final ContentResolver resolver = context.getContentResolver();
+
+        Uri uri = null;
+
+        try
+        {
+            /*
+             * Following contentUri will make uri null
+             */
+//            final Uri contentUri = MediaStore.Images.Media.EXTERNAL_CONTENT_URI;
+//            final Uri contentUri = MediaStore.Files.getContentUri("external");
+
+            final Uri contentUri = MediaStore.Downloads.EXTERNAL_CONTENT_URI;
+            uri = resolver.insert(contentUri, contentValues);
+
+            if (uri == null)
+            {
+                throw new IOException("Failed to create new MediaStore record.");
+            }
+        }
+        catch (IOException e)
+        {
+            if (uri != null)
+            {
+                resolver.delete(uri, null, null);
+            }
+
+            throw new IOException(e);
+        }
+        finally
+        {
+            return uri;
+        }
     }
     // endregion [Private Function]
 }
