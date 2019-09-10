@@ -389,28 +389,28 @@ public class SensorActivity extends AppCompatActivity implements SensorEventList
 
         if (mCbA.isChecked()) {
             stringBuilder.append(String.format(Locale.getDefault(),
-                    "%.3f,%.3f,%.3f,", aReading[0], aReading[1], aReading[2]));
+                    "%.10f,%.10f,%.10f,", aReading[0], aReading[1], aReading[2]));
         }
 
         if (mCbG.isChecked()) {
             stringBuilder.append(String.format(Locale.getDefault(),
-                    "%.3f,%.3f,%.3f,", gReading[0], gReading[1], gReading[2]));
+                    "%.10f,%.10f,%.10f,", gReading[0], gReading[1], gReading[2]));
         }
 
         if (mCbM.isChecked()) {
             stringBuilder.append(String.format(Locale.getDefault(),
-                    "%.3f,%.3f,%.3f,%.3f,%.3f,", mReading[0], mReading[1], mReading[2],
+                    "%.10f,%.10f,%.10f,%.10f,%.10f,", mReading[0], mReading[1], mReading[2],
                     intensityAndroid, intensityAlg));
         }
 
         if (mCbAhrs.isChecked()) {
             stringBuilder.append(String.format(Locale.getDefault(),
-                    "%.3f,%.3f,%.3f,", ahrsReading[1], ahrsReading[2], ahrsReading[0]));
+                    "%.10f,%.10f,%.10f,", ahrsReading[1], ahrsReading[2], ahrsReading[0]));
         }
 
         if (mCbR.isChecked()) {
             stringBuilder.append(String.format(Locale.getDefault(),
-                    "%.3f,%.3f,%.3f,%.3f,%.3f,%.3f,%.3f,%.3f,%.3f",
+                    "%.10f,%.10f,%.10f,%.10f,%.10f,%.10f,%.10f,%.10f,%.10f",
                     rotationMatrix[0], rotationMatrix[1], rotationMatrix[2],
                     rotationMatrix[3], rotationMatrix[4], rotationMatrix[5],
                     rotationMatrix[6], rotationMatrix[7], rotationMatrix[8]));
