@@ -7,6 +7,7 @@ import android.hardware.SensorEventListener;
 import android.hardware.SensorManager;
 import android.os.Build;
 import android.os.Bundle;
+import android.view.View;
 import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.EditText;
@@ -42,6 +43,7 @@ public class SensorActivity extends AppCompatActivity implements SensorEventList
     private final float[] mAccelerometerReading = new float[3];
     private final float[] mGyroscopeReading = new float[3];
     private final float[] mMagnetometerReading = new float[3];
+    private float mPressure_hPa = 0f;
 
     private final float[] mRotationMatrix = new float[9];
     private final float[] mIMatrix = new float[9];
@@ -72,6 +74,8 @@ public class SensorActivity extends AppCompatActivity implements SensorEventList
     CheckBox mCbAhrs;
     @BindView(R.id.cb_r)
     CheckBox mCbR;
+    @BindView(R.id.cb_p)
+    CheckBox mCbP;
     @BindView(R.id.edit_hz)
     EditText mEditHz;
     // endregion [Widget]
@@ -148,16 +152,32 @@ public class SensorActivity extends AppCompatActivity implements SensorEventList
         if (accelerometer != null) {
             mSensorManager.registerListener(this, accelerometer,
                     SensorManager.SENSOR_DELAY_FASTEST, SensorManager.SENSOR_DELAY_UI);
+        } else {
+            mCbA.setVisibility(View.INVISIBLE);
         }
+
         Sensor gyroscope = mSensorManager.getDefaultSensor(Sensor.TYPE_GYROSCOPE);
         if (gyroscope != null) {
             mSensorManager.registerListener(this, gyroscope,
                     SensorManager.SENSOR_DELAY_FASTEST, SensorManager.SENSOR_DELAY_UI);
+        } else {
+            mCbG.setVisibility(View.INVISIBLE);
         }
+
         Sensor magneticField = mSensorManager.getDefaultSensor(Sensor.TYPE_MAGNETIC_FIELD);
         if (magneticField != null) {
             mSensorManager.registerListener(this, magneticField,
                     SensorManager.SENSOR_DELAY_FASTEST, SensorManager.SENSOR_DELAY_UI);
+        } else {
+            mCbM.setVisibility(View.INVISIBLE);
+        }
+
+        Sensor pressureField = mSensorManager.getDefaultSensor(Sensor.TYPE_PRESSURE);
+        if (pressureField != null) {
+            mSensorManager.registerListener(this, pressureField,
+                    SensorManager.SENSOR_DELAY_FASTEST, SensorManager.SENSOR_DELAY_UI);
+        } else {
+            mCbP.setVisibility(View.INVISIBLE);
         }
     }
 
@@ -195,6 +215,12 @@ public class SensorActivity extends AppCompatActivity implements SensorEventList
                     0, mMagnetometerReading.length);
             KLog.i(String.format(Locale.getDefault(), "M,%d,%10.3f,%10.3f,%10.3f", event.timestamp,
                     event.values[0], event.values[1], event.values[2]));
+        } else if (event.sensor.getType() == Sensor.TYPE_PRESSURE) {
+
+            // Atmospheric pressure in hPa (millibar)
+            mPressure_hPa = event.values[0];
+            KLog.i(String.format(Locale.getDefault(), "P,%d,%10.3f", event.timestamp,
+                    event.values[0]));
         }
     }
 
@@ -260,7 +286,7 @@ public class SensorActivity extends AppCompatActivity implements SensorEventList
         setConfigEnable(false);
         KLog.i("A: " + mCbA.isChecked() + ", G: " + mCbG.isChecked() +
                 ", M: " + mCbA.isChecked() + ", AHRS: " + mCbAhrs.isChecked() +
-                ", R: " + mCbR.isChecked());
+                ", R: " + mCbR.isChecked() + ", P: " + mCbP.isChecked());
 
         // Log file
         SimpleDateFormat logFormat = new SimpleDateFormat("yyyyMMddHHmmss", Locale.US);
@@ -349,9 +375,16 @@ public class SensorActivity extends AppCompatActivity implements SensorEventList
                 System.arraycopy(mRotationMatrix, 0, rotationMatrix,
                         0, rotationMatrix.length);
 
+                // Pressure: Atmospheric pressure in hPa (millibar)
+                float pressure = mPressure_hPa;
+
+                // Altitude calculation, https://www.cnblogs.com/HackingProgramer/p/4018114.html
+                double altitude = (pressure == 0) ?
+                        0 : 44330000 * (1 - (Math.pow((pressure / 1013.25), (float) 1.0 / 5255.0)));
+
                 // Inform subscriber to write log
                 emitter.onNext(getSensorDataString(aReading, gReading, mReading, ahrsReading, rotationMatrix,
-                        intensityAndroid, intensityAlg));
+                        intensityAndroid, intensityAlg, pressure, altitude));
 
                 // Show toast for sensor raw data
                 mShowRawDataCount++;
@@ -359,12 +392,13 @@ public class SensorActivity extends AppCompatActivity implements SensorEventList
 
                     // Show toast
                     showToast(String.format(Locale.getDefault(),
-                            "A: %.3f, %.3f, %.3f\nG: %.3f, %.3f, %.3f\nM: %.3f, %.3f, %.3f\nI: %.3f, %.3f\nAHRS: %.3f, %.3f, %.3f",
+                            "A: %.3f, %.3f, %.3f\nG: %.3f, %.3f, %.3f\nM: %.3f, %.3f, %.3f\nI: %.3f, %.3f\nAHRS: %.3f, %.3f, %.3f\nP: %.3f, %.3f",
                             aReading[0], aReading[1], aReading[2],
                             gReading[0], gReading[1], gReading[2],
                             mReading[0], mReading[1], mReading[2],
                             intensityAndroid, intensityAlg,
-                            ahrsReading[1], ahrsReading[2], ahrsReading[0]));
+                            ahrsReading[1], ahrsReading[2], ahrsReading[0],
+                            pressure, altitude));
 
                     // Reset flag
                     mShowRawDataCount = 0;
@@ -382,7 +416,8 @@ public class SensorActivity extends AppCompatActivity implements SensorEventList
 
     private String getSensorDataString(float[] aReading, float[] gReading, float[] mReading,
                                        float[] ahrsReading, float[] rotationMatrix,
-                                       float intensityAndroid, float intensityAlg) {
+                                       float intensityAndroid, float intensityAlg,
+                                       float pressure, double altitude) {
 
         StringBuilder stringBuilder = new StringBuilder(Long.toString(System.currentTimeMillis()));
         stringBuilder.append(",");
@@ -410,10 +445,15 @@ public class SensorActivity extends AppCompatActivity implements SensorEventList
 
         if (mCbR.isChecked()) {
             stringBuilder.append(String.format(Locale.getDefault(),
-                    "%.10f,%.10f,%.10f,%.10f,%.10f,%.10f,%.10f,%.10f,%.10f",
+                    "%.10f,%.10f,%.10f,%.10f,%.10f,%.10f,%.10f,%.10f,%.10f,",
                     rotationMatrix[0], rotationMatrix[1], rotationMatrix[2],
                     rotationMatrix[3], rotationMatrix[4], rotationMatrix[5],
                     rotationMatrix[6], rotationMatrix[7], rotationMatrix[8]));
+        }
+
+        if (mCbP.isChecked()) {
+            stringBuilder.append(String.format(Locale.getDefault(),
+                    "%.10f,%.10f", pressure, altitude));
         }
 
         stringBuilder.append("\n");
@@ -442,7 +482,11 @@ public class SensorActivity extends AppCompatActivity implements SensorEventList
         }
 
         if (mCbR.isChecked()) {
-            stringBuilder.append("R");
+            stringBuilder.append("R,");
+        }
+
+        if (mCbP.isChecked()) {
+            stringBuilder.append("P");
         }
 
         stringBuilder.append("\n");
@@ -478,6 +522,7 @@ public class SensorActivity extends AppCompatActivity implements SensorEventList
         mCbM.setEnabled(b);
         mCbAhrs.setEnabled(b);
         mCbR.setEnabled(b);
+        mCbP.setEnabled(b);
         mEditHz.setEnabled(b);
         mBtnWriteTag.setEnabled(!b);
     }
