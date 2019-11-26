@@ -7,22 +7,22 @@ android {
         applicationId "com.ppcrong.testapp"
         minSdkVersion 21
         targetSdkVersion 29
-        versionCode 1910021427
-        versionName "1.0.1910021427"
+        versionCode 1911261500
+        versionName "1.0.1911261500"
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
     }
     signingConfigs {
         debug {
-            storeFile file("cloudchip.jks")
-            storePassword "cloudchip"
-            keyAlias "cloudchip"
-            keyPassword "cloudchip"
+            storeFile file("ppcrong.jks")
+            storePassword "ppcrong"
+            keyAlias "ppcrong"
+            keyPassword "ppcrong"
         }
         release {
-            storeFile file("cloudchip.jks")
-            storePassword "cloudchip"
-            keyAlias "cloudchip"
-            keyPassword "cloudchip"
+            storeFile file("ppcrong.jks")
+            storePassword "ppcrong"
+            keyAlias "ppcrong"
+            keyPassword "ppcrong"
         }
     }
     buildTypes {
