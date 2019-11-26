@@ -2,6 +2,9 @@ package com.ppcrong.testapp;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.view.Menu;
+import android.view.MenuItem;
+
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 
@@ -10,6 +13,7 @@ import com.ppcrong.testapp.activity.RxJava2Activity;
 import com.ppcrong.testapp.activity.SensorActivity;
 import com.ppcrong.testapp.activity.TimezoneActivity;
 import com.ppcrong.testapp.activity.SettingsActivity;
+import com.ppcrong.testapp.activity.base.AppHelpFragment;
 import com.ppcrong.utils.MiscUtils;
 import com.socks.library.KLog;
 
@@ -67,6 +71,28 @@ public class MainActivity extends AppCompatActivity {
         KLog.i();
 
         initView();
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        // Inflate the menu; this adds items to the action bar if it is present.
+        getMenuInflater().inflate(R.menu.menu_main, menu);
+        return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+
+        int id = item.getItemId();
+
+        if (id == R.id.action_about) {
+            final AppHelpFragment fragment = AppHelpFragment.getInstance(R.string.about_text,
+                    true, false);
+            fragment.show(getSupportFragmentManager(), null);
+            return true;
+        }
+
+        return super.onOptionsItemSelected(item);
     }
     // endregion [Life Cycle]
 
