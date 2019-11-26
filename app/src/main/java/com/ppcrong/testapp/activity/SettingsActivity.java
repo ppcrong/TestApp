@@ -1,4 +1,4 @@
-package com.ppcrong.testapp.activity.setting;
+package com.ppcrong.testapp.activity;
 
 import android.os.Bundle;
 

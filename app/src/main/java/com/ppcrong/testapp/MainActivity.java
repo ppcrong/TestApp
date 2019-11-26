@@ -9,7 +9,7 @@ import com.ppcrong.testapp.activity.LogLibActivity;
 import com.ppcrong.testapp.activity.RxJava2Activity;
 import com.ppcrong.testapp.activity.SensorActivity;
 import com.ppcrong.testapp.activity.TimezoneActivity;
-import com.ppcrong.testapp.activity.setting.SettingsActivity;
+import com.ppcrong.testapp.activity.SettingsActivity;
 import com.ppcrong.utils.MiscUtils;
 import com.socks.library.KLog;
 
